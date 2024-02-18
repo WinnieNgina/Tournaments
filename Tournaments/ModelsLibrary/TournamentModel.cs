@@ -28,9 +28,9 @@
         public TournamentOrganizerModel Organizer { get; set; }
 
         /// <summary>
-        /// Gets or sets the collection of teams participating in the tournament.
+        /// Gets or sets the collection of participations representing teams participating in the tournament.
         /// </summary>
-        public virtual ICollection<TeamModel> Teams { get; set; }
+        public virtual ICollection<ParticipationModel> Participations { get; set; }
         public double AverageRating { get; set; }
         /// <summary>
         /// Gets or sets the collection of reviews associated with the tournament.

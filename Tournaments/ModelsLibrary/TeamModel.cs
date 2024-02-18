@@ -38,5 +38,9 @@ namespace ModelsLibrary
         /// Team members
         /// </summary>
         public virtual ICollection<PlayerModel> Players { get; set; }
+        /// <summary>
+        /// Gets or sets the collection of participations representing the team's involvement in tournaments.
+        /// </summary>
+        public virtual ICollection<ParticipationModel> Participations { get; set; }
     }
 }
