@@ -29,5 +29,6 @@ namespace ModelsLibrary
         /// Indicates whether the user is locked from using the platform.
         /// </summary>
         public bool IsLocked { get; set; }
+        public virtual ICollection<ReviewModel> Reviews { get; set; }
     }
 }
