@@ -1,4 +1,6 @@
-﻿namespace ModelsLibrary
+﻿using ModelsLibrary.Models;
+
+namespace ModelsLibrary
 {
     public class TournamentModel
     {
@@ -11,6 +13,7 @@
         /// Gets or sets the name of the tournament.
         /// </summary>
         public string Name { get; set; }
+        public decimal EntryFee { get; set; }
 
         /// <summary>
         /// Gets or sets the date of the tournament.
@@ -36,5 +39,6 @@
         /// Gets or sets the collection of reviews associated with the tournament.
         /// </summary>
         public virtual ICollection<ReviewModel> Reviews { get; set; }
+        public virtual ICollection<TournamentPrizeModel> TournamentPrizes { get; set; }
     }
 }

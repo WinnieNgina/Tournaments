@@ -6,6 +6,10 @@
         /// Gets or sets the unique identifier for the review.
         /// </summary>
         public string Id { get; set; }
+        /// <summary>
+        /// Sets the time when a review was created
+        /// </summary>
+        public DateTime CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or sets additional context or details about the review.

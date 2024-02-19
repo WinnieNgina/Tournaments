@@ -24,5 +24,12 @@
         /// </summary>
 
         public NextOfKinModel NextOfKin { get; set; }
+        public PlayerStatus Status { get; set; }
+    }
+    public enum PlayerStatus
+    {
+        SearchingForTeam,
+        HasTeam,
+        Inactive
     }
 }
