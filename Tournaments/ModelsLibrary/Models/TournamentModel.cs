@@ -1,4 +1,5 @@
 ﻿using ModelsLibrary.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace ModelsLibrary
 {
@@ -14,6 +15,13 @@ namespace ModelsLibrary
         /// </summary>
         public string Name { get; set; }
         public decimal EntryFee { get; set; }
+        public int TeamsLimit { get; set; }
+        public string Location { get; set; }
+        /// <summary>
+        /// Provides a brief description of the tournament
+        /// </summary>
+        [MaxLength(1000)]
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the date of the tournament.
@@ -40,5 +48,14 @@ namespace ModelsLibrary
         /// </summary>
         public virtual ICollection<ReviewModel> Reviews { get; set; }
         public virtual ICollection<TournamentPrizeModel> TournamentPrizes { get; set; }
+        // Collection of match-ups associated with the tournament
+        public virtual ICollection<MatchUpModel> MatchUps { get; set; }
+        public TournamentStructureType StructureType { get; set; }
+    }
+    public enum TournamentStructureType
+    {
+        RoundRobin,
+        SingleElimination,
+        DoubleElimination
     }
 }
