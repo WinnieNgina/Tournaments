@@ -1,4 +1,4 @@
-﻿namespace ModelsLibrary;
+﻿namespace ModelsLibrary.Models;
 public class ParticipationModel
 {
     /// <summary>

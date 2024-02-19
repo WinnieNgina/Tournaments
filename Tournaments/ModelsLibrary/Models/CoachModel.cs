@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 
-namespace ModelsLibrary
+namespace ModelsLibrary.Models
 {
     /// <summary>
     /// Represents a coach for teams in the application.

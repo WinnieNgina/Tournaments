@@ -1,4 +1,4 @@
-﻿namespace ModelsLibrary
+﻿namespace ModelsLibrary.Models
 {
     /// <summary>
     /// Represents information about the next of kin associated with one or more players.

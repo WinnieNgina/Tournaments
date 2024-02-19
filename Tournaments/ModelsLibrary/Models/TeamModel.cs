@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ModelsLibrary;
+namespace ModelsLibrary.Models;
 
 public class TeamModel
 {

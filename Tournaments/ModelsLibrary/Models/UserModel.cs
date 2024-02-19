@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
-using System;
+﻿using Microsoft.AspNetCore.Identity;
 
-namespace ModelsLibrary
+namespace ModelsLibrary.Models
 {
     /// <summary>
     /// Represents a user in the application,
