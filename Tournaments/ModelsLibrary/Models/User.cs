@@ -6,7 +6,7 @@ namespace ModelsLibrary.Models
     /// Represents a user in the application,
     /// inheriting from IdentityUser provided by Microsoft.AspNet.Identity.
     /// </summary>
-    public class User : IdentityUser
+    public abstract class User : IdentityUser
     {
         /// <summary>
         /// First name of the user.

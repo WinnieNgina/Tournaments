@@ -23,10 +23,48 @@ namespace ModelsLibrary.DataAccess
         public DbSet<TournamentModel> Tournament { get; set; }
         public DbSet<TournamentOrganizerModel> Organizer { get; set; }
         public DbSet<TournamentPrizeModel> TournamentPrizes { get; set; }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<PlayerTeamModel>()
+                .HasKey(ptm => new { ptm.PlayerId, ptm.TeamId });
+
+            // Configure the foreign key relationships
+            modelBuilder.Entity<PlayerTeamModel>()
+                .HasOne(ptm => ptm.Player)
+                .WithMany(p => p.Teams)
+                .HasForeignKey(ptm => ptm.PlayerId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<PlayerTeamModel>()
+                .HasOne(ptm => ptm.Team)
+                .WithMany(t => t.Players)
+                .HasForeignKey(ptm => ptm.TeamId)
+                .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<MatchUpModel>()
+                .HasOne(m => m.Tournament)
+                .WithMany(t => t.MatchUps)
+                .HasForeignKey(m => m.TournamentId)
+                .OnDelete(DeleteBehavior.NoAction); // Changed from Cascade to NoAction
+            modelBuilder.Entity<ParticipationModel>()
+                .HasOne(p => p.Tournament)
+                .WithMany(t => t.Participations)
+                .HasForeignKey(p => p.TournamentId)
+                .OnDelete(DeleteBehavior.NoAction); // Changed from Cascade to NoAction
+
+            modelBuilder.Entity<ReviewModel>()
+                .HasOne(r => r.Tournament)
+                .WithMany(t => t.Reviews)
+                .HasForeignKey(r => r.TournamentId)
+                .OnDelete(DeleteBehavior.NoAction); // Changed from Cascade to NoAction
+
+
+            modelBuilder.Entity<User>()
+                .HasDiscriminator<string>("UserType")
+                .HasValue<CoachModel>("Coach")
+                .HasValue<PlayerModel>("Player")
+                .HasValue<TournamentOrganizerModel>("TournamentOrganizer");
             SeedRoles(modelBuilder);
         }
 

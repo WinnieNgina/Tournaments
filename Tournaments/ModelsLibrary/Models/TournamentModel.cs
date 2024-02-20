@@ -13,7 +13,7 @@ public class TournamentModel
     /// Gets or sets the name of the tournament.
     /// </summary>
     public string Name { get; set; }
-    public decimal? EntryFee { get; set; }
+    public decimal EntryFee { get; set; }
     public int TeamsLimit { get; set; }
     public string Location { get; set; }
     /// <summary>

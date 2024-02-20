@@ -10,7 +10,7 @@ public class PlayerModel : User
     /// <summary>
     /// The collection of teams where a player is an active participant
     /// </summary>
-    public virtual ICollection<TeamModel> Teams { get; set; }
+    public virtual ICollection<PlayerTeamModel> Teams { get; set; }
     /// <summary>
     /// ID of the player's next of kin
     /// </summary>

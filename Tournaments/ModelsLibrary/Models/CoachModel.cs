@@ -5,7 +5,7 @@ namespace ModelsLibrary.Models
     /// <summary>
     /// Represents a coach for teams in the application.
     /// </summary>
-    public class CoachModel
+    public class CoachModel : User
     {
         /// <summary>
         /// Gets or sets the number of years of coaching experience.

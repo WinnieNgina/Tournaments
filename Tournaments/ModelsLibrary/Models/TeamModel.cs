@@ -34,7 +34,7 @@ public class TeamModel
     /// <summary>
     /// Team members
     /// </summary>
-    public virtual ICollection<PlayerModel> Players { get; set; }
+    public virtual ICollection<PlayerTeamModel> Players { get; set; }
     /// <summary>
     /// Gets or sets the collection of participations representing the team's involvement in tournaments.
     /// </summary>
