@@ -34,7 +34,7 @@ public class ReviewModel
     /// <summary>
     /// Gets or sets the UserModel representing the person making the review.
     /// </summary>
-    public virtual UserModel Reviewer { get; set; }
+    public virtual User Reviewer { get; set; }
 
     /// <summary>
     /// Gets or sets the rating given in the review.

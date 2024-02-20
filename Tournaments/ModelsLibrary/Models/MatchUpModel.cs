@@ -10,7 +10,7 @@ public class MatchUpModel
     public virtual ICollection<MatchUpEntryModel> Entries { get; set; }
 
     public string WinningTeamId { get; set; }
-    public TeamModel WinningTeam {  get; set; }
+    public TeamModel WinningTeam { get; set; }
     public int MatchUpRound { get; set; }
     public MatchStatus Status { get; set; }
 }

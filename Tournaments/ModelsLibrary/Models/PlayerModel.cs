@@ -1,6 +1,6 @@
 ﻿namespace ModelsLibrary.Models;
 
-public class PlayerModel : UserModel
+public class PlayerModel : User
 {
     /// <summary>
     /// Gets or sets the date of birth of the player.

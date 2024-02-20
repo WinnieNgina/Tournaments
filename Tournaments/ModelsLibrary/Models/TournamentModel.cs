@@ -1,5 +1,4 @@
-﻿using ModelsLibrary.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ModelsLibrary.Models;
 

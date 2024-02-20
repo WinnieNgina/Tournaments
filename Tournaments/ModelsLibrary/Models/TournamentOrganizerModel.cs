@@ -1,6 +1,6 @@
 ﻿namespace ModelsLibrary.Models;
 
-public class TournamentOrganizerModel : UserModel
+public class TournamentOrganizerModel : User
 {
     /// <summary>
     /// Gets or sets the organization name or office of the tournament organizer. 

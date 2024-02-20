@@ -3,7 +3,7 @@
 public class MatchUpEntryModel
 {
     public string Id { get; set; }
-    
+
     public string TeamCompetingId { get; set; }
     public TeamModel TeamCompeting { get; set; }
     public double Score { get; set; }

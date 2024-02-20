@@ -1,0 +1,15 @@
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\ModelsLibrary\bin\Debug\net8.0\ModelsLibrary.deps.json
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\ModelsLibrary\bin\Debug\net8.0\ModelsLibrary.runtimeconfig.json
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\ModelsLibrary\bin\Debug\net8.0\ModelsLibrary.dll
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\ModelsLibrary\bin\Debug\net8.0\ModelsLibrary.pdb
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\ModelsLibrary\obj\Debug\net8.0\ModelsLibrary.csproj.AssemblyReference.cache
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\ModelsLibrary\obj\Debug\net8.0\ModelsLibrary.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\ModelsLibrary\obj\Debug\net8.0\ModelsLibrary.AssemblyInfoInputs.cache
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\ModelsLibrary\obj\Debug\net8.0\ModelsLibrary.AssemblyInfo.cs
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\ModelsLibrary\obj\Debug\net8.0\ModelsLibrary.csproj.CoreCompileInputs.cache
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\ModelsLibrary\obj\Debug\net8.0\ModelsLibrary.sourcelink.json
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\ModelsLibrary\obj\Debug\net8.0\ModelsLibrary.dll
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\ModelsLibrary\obj\Debug\net8.0\refint\ModelsLibrary.dll
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\ModelsLibrary\obj\Debug\net8.0\ModelsLibrary.pdb
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\ModelsLibrary\obj\Debug\net8.0\ModelsLibrary.genruntimeconfig.cache
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\ModelsLibrary\obj\Debug\net8.0\ref\ModelsLibrary.dll

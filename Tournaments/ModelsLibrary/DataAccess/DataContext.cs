@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ModelsLibrary.Models;
-using ModelsLibrary.Utilities; // Adjust the namespace based on your project structure
+using ModelsLibrary.Utilities;
 
 namespace ModelsLibrary.DataAccess
 {
-    public class DataContext : IdentityDbContext<UserModel>
+    public class DataContext : IdentityDbContext<User>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -23,6 +23,7 @@ namespace ModelsLibrary.DataAccess
         public DbSet<TournamentModel> Tournament { get; set; }
         public DbSet<TournamentOrganizerModel> Organizer { get; set; }
         public DbSet<TournamentPrizeModel> TournamentPrizes { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
