@@ -7,20 +7,22 @@ public class TournamentModel
     /// <summary>
     /// Gets or sets the unique identifier for the tournament.
     /// </summary>
-    public string Id { get; set; }
+    public string Id { get; set; } = Guid.NewGuid().ToString();
 
     /// <summary>
     /// Gets or sets the name of the tournament.
     /// </summary>
-    public string Name { get; set; }
+    [MaxLength(256)]
+    public required string Name { get; set; }
     public decimal EntryFee { get; set; }
-    public int TeamsLimit { get; set; }
-    public string Location { get; set; }
+    public required int TeamsLimit { get; set; }
+    [MaxLength(256)]
+    public required string Location { get; set; }
     /// <summary>
     /// Provides a brief description of the tournament
     /// </summary>
-    [MaxLength(1000)]
-    public string Description { get; set; }
+    [MaxLength(2000)]
+    public required string Description { get; set; }
 
     /// <summary>
     /// Gets or sets the date of the tournament.
@@ -35,7 +37,7 @@ public class TournamentModel
     /// <summary>
     /// Gets or sets the TournamentOrganizerModel representing the organizer of the tournament.
     /// </summary>
-    public TournamentOrganizerModel Organizer { get; set; }
+    public virtual TournamentOrganizerModel Organizer { get; set; }
 
     /// <summary>
     /// Gets or sets the collection of participations representing teams participating in the tournament.
@@ -49,7 +51,7 @@ public class TournamentModel
     public virtual ICollection<TournamentPrizeModel> TournamentPrizes { get; set; }
     // Collection of match-ups associated with the tournament
     public virtual ICollection<MatchUpModel> MatchUps { get; set; }
-    public TournamentStructureType StructureType { get; set; }
+    public required TournamentStructureType StructureType { get; set; }
 }
 public enum TournamentStructureType
 {

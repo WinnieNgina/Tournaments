@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace API.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class InitialCreation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,10 +32,10 @@ namespace API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Relationship = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContactInfo = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Relationship = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    ContactInfo = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,11 +47,11 @@ namespace API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     PrizeAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PrizePercentage = table.Column<double>(type: "float", nullable: false),
-                    PrizeType = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PrizeType = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -84,20 +84,20 @@ namespace API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AreaOfResidence = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    AreaOfResidence = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     SecretKey = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsLocked = table.Column<bool>(type: "bit", nullable: false),
                     UserType = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
                     YearsOfExperience = table.Column<int>(type: "int", nullable: true),
-                    SocialMediaUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CoachingSpecialization = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Achievements = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    SocialMediaUrl = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CoachingSpecialization = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Achievements = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
                     NextOfKinId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: true),
-                    OrganizationName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OrganizationName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -214,8 +214,8 @@ namespace API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     CoachId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -234,11 +234,11 @@ namespace API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     EntryFee = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TeamsLimit = table.Column<int>(type: "int", nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     TournamentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     OrganizerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AverageRating = table.Column<double>(type: "float", nullable: false),
@@ -335,7 +335,7 @@ namespace API.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     TournamentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ReviewerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Rating = table.Column<int>(type: "int", nullable: false)
@@ -418,9 +418,9 @@ namespace API.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "4f7910d0-bb63-4057-883b-47ee4b7e6d8a", "14b3acdb-bc57-477b-a7c7-57db22b22ce2", "Organizer", "ORGANIZER" },
-                    { "626ee2af-49ed-406a-b210-431a3ea53991", "f1161d77-a8e3-49d6-82eb-2dac08424997", "Coach", "COACH" },
-                    { "9174bcf0-9782-4d42-a3a7-615967bc7859", "dd48dcef-b614-4072-a32b-02d62f512a48", "Player", "PLAYER" }
+                    { "135bd32f-dfb3-4a17-90c1-d35bdba7d780", "2f5e94f3-5298-4dc8-9749-01e087e78fb3", "Player", "PLAYER" },
+                    { "d30b6a6e-5d4d-4bfd-959c-caa6662b73c4", "dafac6c3-1e52-43ff-b48d-042b0ffa139c", "Coach", "COACH" },
+                    { "f83ede4a-bcdc-4833-8c48-1380874d6f88", "4acc8a9d-b605-4a50-b65b-cff1b65ae707", "Organizer", "ORGANIZER" }
                 });
 
             migrationBuilder.CreateIndex(

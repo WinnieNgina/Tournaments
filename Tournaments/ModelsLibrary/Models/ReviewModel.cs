@@ -1,11 +1,13 @@
-﻿namespace ModelsLibrary.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ModelsLibrary.Models;
 
 public class ReviewModel
 {
     /// <summary>
     /// Gets or sets the unique identifier for the review.
     /// </summary>
-    public string Id { get; set; }
+    public string Id { get; set; } = Guid.NewGuid().ToString();
     /// <summary>
     /// Sets the time when a review was created
     /// </summary>
@@ -14,6 +16,7 @@ public class ReviewModel
     /// <summary>
     /// Gets or sets additional context or details about the review.
     /// </summary>
+    [MaxLength(1000)]
     public string Comment { get; set; }
 
     /// <summary>
@@ -24,7 +27,7 @@ public class ReviewModel
     /// <summary>
     /// Gets or sets the TournamentModel representing the associated tournament.
     /// </summary>
-    public TournamentModel Tournament { get; set; }
+    public virtual TournamentModel Tournament { get; set; }
 
     /// <summary>
     /// Gets or sets the unique identifier for the person making the review.

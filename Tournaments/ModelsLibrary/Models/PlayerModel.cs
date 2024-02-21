@@ -20,7 +20,7 @@ public class PlayerModel : User
     /// Gets or sets the next of kin associated with the player.
     /// </summary>
 
-    public NextOfKinModel NextOfKin { get; set; }
+    public virtual NextOfKinModel NextOfKin { get; set; }
     public PlayerStatus Status { get; set; }
 }
 public enum PlayerStatus

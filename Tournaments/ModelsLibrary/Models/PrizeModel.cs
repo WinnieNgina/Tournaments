@@ -7,12 +7,13 @@ public class PrizeModel
     /// <summary>
     /// Gets or sets the unique identifier for the prize.
     /// </summary>
-    public string Id { get; set; }
+    public string Id { get; set; } = Guid.NewGuid().ToString();
 
     /// <summary>
     /// Gets or sets the title or name of the prize.
     /// </summary>
-    public string Title { get; set; }
+    [MaxLength(100)]
+    public required string Title { get; set; }
 
     /// <summary>
     /// Gets or sets the description of the prize.
@@ -33,5 +34,6 @@ public class PrizeModel
     /// <summary>
     /// Gets or sets the type of the prize (e.g., cash, merchandise, etc.).
     /// </summary>
-    public string PrizeType { get; set; }
+    [MaxLength(200)]
+    public required string PrizeType { get; set; }
 }

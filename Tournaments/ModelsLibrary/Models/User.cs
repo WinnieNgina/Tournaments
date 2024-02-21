@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace ModelsLibrary.Models
 {
@@ -11,17 +12,20 @@ namespace ModelsLibrary.Models
         /// <summary>
         /// First name of the user.
         /// </summary>
-        public string FirstName { get; set; }
+        [MaxLength(256)]
+        public required string FirstName { get; set; }
 
         /// <summary>
         /// Last name of the user.
         /// </summary>
-        public string LastName { get; set; }
+        [MaxLength(256)]
+        public required string LastName { get; set; }
 
         /// <summary>
         /// Area of residence of the user.
         /// </summary>
-        public string AreaOfResidence { get; set; }
+        [MaxLength(256)]
+        public required string AreaOfResidence { get; set; }
         public string SecretKey { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>

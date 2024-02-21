@@ -4,7 +4,7 @@ public class ParticipationModel
     /// <summary>
     /// Gets or sets the unique identifier for the registration.
     /// </summary>
-    public string Id { get; set; }
+    public string Id { get; set; } = Guid.NewGuid().ToString();
 
     /// <summary>
     /// Gets or sets a value indicating whether the registration is confirmed.
@@ -24,7 +24,7 @@ public class ParticipationModel
     /// <summary>
     /// Gets or sets the TeamModel representing the associated team.
     /// </summary>
-    public TeamModel Team { get; set; }
+    public virtual TeamModel Team { get; set; }
 
     /// <summary>
     /// Id for the tournament
@@ -34,5 +34,5 @@ public class ParticipationModel
     /// <summary>
     /// Tournament Model
     /// </summary>
-    public TournamentModel Tournament { get; set; }
+    public virtual TournamentModel Tournament { get; set; }
 }
