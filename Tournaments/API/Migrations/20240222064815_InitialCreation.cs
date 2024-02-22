@@ -84,12 +84,12 @@ namespace API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserType = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     AreaOfResidence = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     SecretKey = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsLocked = table.Column<bool>(type: "bit", nullable: false),
-                    UserType = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
                     YearsOfExperience = table.Column<int>(type: "int", nullable: true),
                     SocialMediaUrl = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     CoachingSpecialization = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
@@ -418,9 +418,9 @@ namespace API.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "135bd32f-dfb3-4a17-90c1-d35bdba7d780", "2f5e94f3-5298-4dc8-9749-01e087e78fb3", "Player", "PLAYER" },
-                    { "d30b6a6e-5d4d-4bfd-959c-caa6662b73c4", "dafac6c3-1e52-43ff-b48d-042b0ffa139c", "Coach", "COACH" },
-                    { "f83ede4a-bcdc-4833-8c48-1380874d6f88", "4acc8a9d-b605-4a50-b65b-cff1b65ae707", "Organizer", "ORGANIZER" }
+                    { "023592d8-6b72-47a5-bc60-bb0043c503e1", "d3a3ac24-5933-42eb-9a11-bc0f07610249", "Organizer", "ORGANIZER" },
+                    { "067bd3d7-4adc-45d3-bb7b-a3a0954e8ea6", "3fcd2245-2a82-4b47-905b-1bd0af9631c2", "Coach", "COACH" },
+                    { "ada0ffab-0b8d-4d5b-a243-ca5f124cf33a", "c2907e76-25e0-4c9a-95c3-5415810816c8", "Player", "PLAYER" }
                 });
 
             migrationBuilder.CreateIndex(

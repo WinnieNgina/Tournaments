@@ -27,7 +27,7 @@ public class ReviewModel
     /// <summary>
     /// Gets or sets the TournamentModel representing the associated tournament.
     /// </summary>
-    public virtual TournamentModel Tournament { get; set; }
+    public TournamentModel Tournament { get; set; }
 
     /// <summary>
     /// Gets or sets the unique identifier for the person making the review.
@@ -37,7 +37,7 @@ public class ReviewModel
     /// <summary>
     /// Gets or sets the UserModel representing the person making the review.
     /// </summary>
-    public virtual User Reviewer { get; set; }
+    public User Reviewer { get; set; }
 
     /// <summary>
     /// Gets or sets the rating given in the review.

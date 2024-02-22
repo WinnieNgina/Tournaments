@@ -39,6 +39,6 @@ namespace ModelsLibrary.Models
         /// <summary>
         /// Gets or sets the collection of players associated with this next of kin.
         /// </summary>
-        public virtual ICollection<PlayerModel> Players { get; set; }
+        public ICollection<PlayerModel> Players { get; set; }
     }
 }

@@ -11,10 +11,6 @@ namespace ModelsLibrary.DataAccess
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseLazyLoadingProxies(); // Enable lazy loading
-        }
         public DbSet<CoachModel> Coach { get; set; }
         public DbSet<MatchUpEntryModel> Entries { get; set; }
         public DbSet<MatchUpModel> MatchUp { get; set; }

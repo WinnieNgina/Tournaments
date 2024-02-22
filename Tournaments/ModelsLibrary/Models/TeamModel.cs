@@ -30,14 +30,14 @@ public class TeamModel
     /// <summary>
     /// CoachModel representing the coach who coaches the team.
     /// </summary>
-    public virtual CoachModel Coach { get; set; }
+    public CoachModel Coach { get; set; }
 
     /// <summary>
     /// Team members
     /// </summary>
-    public virtual ICollection<PlayerTeamModel> Players { get; set; }
+    public ICollection<PlayerTeamModel> Players { get; set; }
     /// <summary>
     /// Gets or sets the collection of participations representing the team's involvement in tournaments.
     /// </summary>
-    public virtual ICollection<ParticipationModel> Participations { get; set; }
+    public ICollection<ParticipationModel> Participations { get; set; }
 }

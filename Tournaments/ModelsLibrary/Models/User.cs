@@ -9,6 +9,7 @@ namespace ModelsLibrary.Models
     /// </summary>
     public abstract class User : IdentityUser
     {
+        public string UserType { get; set; }
         /// <summary>
         /// First name of the user.
         /// </summary>
@@ -32,6 +33,6 @@ namespace ModelsLibrary.Models
         /// Indicates whether the user is locked from using the platform.
         /// </summary>
         public bool IsLocked { get; set; }
-        public virtual ICollection<ReviewModel> Reviews { get; set; }
+        public ICollection<ReviewModel> Reviews { get; set; }
     }
 }

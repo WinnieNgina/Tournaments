@@ -24,7 +24,7 @@ public class ParticipationModel
     /// <summary>
     /// Gets or sets the TeamModel representing the associated team.
     /// </summary>
-    public virtual TeamModel Team { get; set; }
+    public TeamModel Team { get; set; }
 
     /// <summary>
     /// Id for the tournament
@@ -34,5 +34,5 @@ public class ParticipationModel
     /// <summary>
     /// Tournament Model
     /// </summary>
-    public virtual TournamentModel Tournament { get; set; }
+    public TournamentModel Tournament { get; set; }
 }

@@ -12,6 +12,6 @@ public class TournamentOrganizerModel : User
     /// <summary>
     /// Gets or sets the collection of tournaments organized by this organizer.
     /// </summary>
-    public virtual ICollection<TournamentModel> Tournaments { get; set; }
+    public ICollection<TournamentModel> Tournaments { get; set; }
 
 }

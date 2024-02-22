@@ -37,20 +37,20 @@ public class TournamentModel
     /// <summary>
     /// Gets or sets the TournamentOrganizerModel representing the organizer of the tournament.
     /// </summary>
-    public virtual TournamentOrganizerModel Organizer { get; set; }
+    public TournamentOrganizerModel Organizer { get; set; }
 
     /// <summary>
     /// Gets or sets the collection of participations representing teams participating in the tournament.
     /// </summary>
-    public virtual ICollection<ParticipationModel> Participations { get; set; }
+    public ICollection<ParticipationModel> Participations { get; set; }
     public double AverageRating { get; set; }
     /// <summary>
     /// Gets or sets the collection of reviews associated with the tournament.
     /// </summary>
-    public virtual ICollection<ReviewModel> Reviews { get; set; }
-    public virtual ICollection<TournamentPrizeModel> TournamentPrizes { get; set; }
+    public ICollection<ReviewModel> Reviews { get; set; }
+    public ICollection<TournamentPrizeModel> TournamentPrizes { get; set; }
     // Collection of match-ups associated with the tournament
-    public virtual ICollection<MatchUpModel> MatchUps { get; set; }
+    public ICollection<MatchUpModel> MatchUps { get; set; }
     public required TournamentStructureType StructureType { get; set; }
 }
 public enum TournamentStructureType

@@ -35,6 +35,6 @@ namespace ModelsLibrary.Models
         /// <summary>
         /// List of teams trained by the coach
         /// </summary>
-        public virtual ICollection<TeamModel> Teams { get; set; }
+        public ICollection<TeamModel> Teams { get; set; }
     }
 }

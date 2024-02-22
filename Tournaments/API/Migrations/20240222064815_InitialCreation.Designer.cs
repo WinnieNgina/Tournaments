@@ -12,7 +12,7 @@ using ModelsLibrary.DataAccess;
 namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240221100444_InitialCreation")]
+    [Migration("20240222064815_InitialCreation")]
     partial class InitialCreation
     {
         /// <inheritdoc />
@@ -21,9 +21,6 @@ namespace API.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.2")
-                .HasAnnotation("Proxies:ChangeTracking", false)
-                .HasAnnotation("Proxies:CheckEquality", false)
-                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -57,22 +54,22 @@ namespace API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "135bd32f-dfb3-4a17-90c1-d35bdba7d780",
-                            ConcurrencyStamp = "2f5e94f3-5298-4dc8-9749-01e087e78fb3",
+                            Id = "ada0ffab-0b8d-4d5b-a243-ca5f124cf33a",
+                            ConcurrencyStamp = "c2907e76-25e0-4c9a-95c3-5415810816c8",
                             Name = "Player",
                             NormalizedName = "PLAYER"
                         },
                         new
                         {
-                            Id = "f83ede4a-bcdc-4833-8c48-1380874d6f88",
-                            ConcurrencyStamp = "4acc8a9d-b605-4a50-b65b-cff1b65ae707",
+                            Id = "023592d8-6b72-47a5-bc60-bb0043c503e1",
+                            ConcurrencyStamp = "d3a3ac24-5933-42eb-9a11-bc0f07610249",
                             Name = "Organizer",
                             NormalizedName = "ORGANIZER"
                         },
                         new
                         {
-                            Id = "d30b6a6e-5d4d-4bfd-959c-caa6662b73c4",
-                            ConcurrencyStamp = "dafac6c3-1e52-43ff-b48d-042b0ffa139c",
+                            Id = "067bd3d7-4adc-45d3-bb7b-a3a0954e8ea6",
+                            ConcurrencyStamp = "3fcd2245-2a82-4b47-905b-1bd0af9631c2",
                             Name = "Coach",
                             NormalizedName = "COACH"
                         });

@@ -10,7 +10,7 @@ public class PlayerModel : User
     /// <summary>
     /// The collection of teams where a player is an active participant
     /// </summary>
-    public virtual ICollection<PlayerTeamModel> Teams { get; set; }
+    public ICollection<PlayerTeamModel> Teams { get; set; }
     /// <summary>
     /// ID of the player's next of kin
     /// </summary>
@@ -20,7 +20,7 @@ public class PlayerModel : User
     /// Gets or sets the next of kin associated with the player.
     /// </summary>
 
-    public virtual NextOfKinModel NextOfKin { get; set; }
+    public NextOfKinModel NextOfKin { get; set; }
     public PlayerStatus Status { get; set; }
 }
 public enum PlayerStatus
