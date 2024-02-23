@@ -5,7 +5,7 @@ public class PlayerModel : User
     /// <summary>
     /// Gets or sets the date of birth of the player.
     /// </summary>
-    public DateTime DateOfBirth { get; set; }
+    public required DateTime DateOfBirth { get; set; }
 
     /// <summary>
     /// The collection of teams where a player is an active participant
@@ -21,7 +21,7 @@ public class PlayerModel : User
     /// </summary>
 
     public NextOfKinModel NextOfKin { get; set; }
-    public PlayerStatus Status { get; set; }
+    public required PlayerStatus Status { get; set; }
 }
 public enum PlayerStatus
 {

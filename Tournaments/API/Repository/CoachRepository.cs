@@ -154,7 +154,7 @@ public class CoachRepository : ICoachRepository
             return result.Succeeded;
         }
 
-        return false; // Coach does not exist or is not of UserType "Player"
+        return false; // Coach does not exist or is not of UserType "Coach"
     }
 
 
