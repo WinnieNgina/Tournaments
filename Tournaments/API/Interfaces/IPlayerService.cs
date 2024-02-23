@@ -2,8 +2,7 @@
 using ModelsLibrary.Models;
 
 namespace API.Interfaces;
-
-public interface IPlayerRepository
+public interface IPlayerService
 {
     Task<PlayerModelDto> GetPlayerByIdAsync(string id);
     Task<PlayerModelDto> GetPlayerByEmailAsync(string email);

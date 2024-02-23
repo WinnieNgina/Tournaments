@@ -59,6 +59,9 @@ namespace ModelsLibrary.DataAccess
                 .HasForeignKey(r => r.TournamentId)
                 .OnDelete(DeleteBehavior.NoAction); // Changed from Cascade to NoAction
 
+            modelBuilder.Entity<TeamModel>()
+                .HasIndex(t => t.Name)
+                .IsUnique(true);
 
             modelBuilder.Entity<User>()
                 .HasDiscriminator<string>("UserType")

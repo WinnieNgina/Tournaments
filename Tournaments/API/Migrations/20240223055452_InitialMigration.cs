@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace API.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreation : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -418,9 +418,9 @@ namespace API.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "023592d8-6b72-47a5-bc60-bb0043c503e1", "d3a3ac24-5933-42eb-9a11-bc0f07610249", "Organizer", "ORGANIZER" },
-                    { "067bd3d7-4adc-45d3-bb7b-a3a0954e8ea6", "3fcd2245-2a82-4b47-905b-1bd0af9631c2", "Coach", "COACH" },
-                    { "ada0ffab-0b8d-4d5b-a243-ca5f124cf33a", "c2907e76-25e0-4c9a-95c3-5415810816c8", "Player", "PLAYER" }
+                    { "099b5799-ec5d-4c87-8b85-5b755e05670f", "c0d275b1-3414-4894-8e62-b29f2a13b832", "Organizer", "ORGANIZER" },
+                    { "10a127e6-f993-4f0f-a0a8-73362ec999ca", "ec6e0661-d22a-447c-a8fa-1cb960b26e6d", "Player", "PLAYER" },
+                    { "466d36e6-d253-47e7-b5cb-e912c4cb6d83", "2e5508ee-2a19-4e7e-9ac5-bc4c370b170e", "Coach", "COACH" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -516,6 +516,12 @@ namespace API.Migrations
                 name: "IX_Team_CoachId",
                 table: "Team",
                 column: "CoachId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Team_Name",
+                table: "Team",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tournament_OrganizerId",

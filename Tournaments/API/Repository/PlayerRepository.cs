@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using API.Interfaces;
 using ModelsLibrary.Models;
 using ModelsLibrary.DataAccess;
+using API.DTO;
 
 public class PlayerRepository : IPlayerRepository
 {
@@ -11,6 +12,8 @@ public class PlayerRepository : IPlayerRepository
     private readonly SignInManager<User> _signInManager;
     private readonly DataContext _context;
     private readonly IMemoryCache _cache;
+    private IQueryable<PlayerModel> Players => _userManager.Users.OfType<PlayerModel>();
+
 
     public PlayerRepository(UserManager<User> userManager, SignInManager<User> signInManager, DataContext context, IMemoryCache cache)
     {
@@ -20,19 +23,34 @@ public class PlayerRepository : IPlayerRepository
         _cache = cache;
     }
 
-    public async Task<PlayerModel> GetPlayerByIdAsync(string id)
+    public async Task<PlayerModelDto> GetPlayerByIdAsync(string id)
     {
         // Define a cache key based on the player ID
         var cacheKey = $"PlayerModel:{id}";
 
         // Try to get the player from the cache
-        if (!_cache.TryGetValue(cacheKey, out PlayerModel player))
+        if (!_cache.TryGetValue(cacheKey, out PlayerModelDto player))
         {
             // If the player is not in the cache, fetch it from the database
-            var user = await _userManager.FindByIdAsync(id);
-            if (user != null && user.UserType == "Player")
+            var user = await Players
+                .Where(u => u.Id == id) // Further filtering by Id
+                .Select(u => new PlayerModelDto
+                {
+                    Id = u.Id,
+                    UserName = u.UserName,
+                    Email = u.Email,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    AreaOfResidence = u.AreaOfResidence,
+                    DateOfBirth = u.DateOfBirth,
+                    NextOfKinCOntactInfo = u.NextOfKin.ContactInfo,
+                    Status = u.Status,
+                    TeamNames = u.Teams.Select(t => t.Team.Name).ToList()
+                })
+                .FirstAsync() ;
+            if (user != null)
             {
-                player = (PlayerModel)user;
+                player = user;
 
                 // Define cache options
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
@@ -46,20 +64,34 @@ public class PlayerRepository : IPlayerRepository
 
         return player;
     }
-    public async Task<PlayerModel> GetPlayerByEmailAsync(string email)
+    public async Task<PlayerModelDto> GetPlayerByEmailAsync(string email)
     {
         // Define a cache key based on the player email
         var cacheKey = $"PlayerModel:{email}";
 
         // Try to get the player from the cache
-        if (!_cache.TryGetValue(cacheKey, out PlayerModel player))
+        if (!_cache.TryGetValue(cacheKey, out PlayerModelDto player))
         {
             // If the player is not in the cache, fetch it from the database
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user != null && user.UserType == "Player")
+            var user = await Players
+                .Where(u => u.Email == email) // Further filtering by Id
+                .Select(u => new PlayerModelDto
+                {
+                    Id = u.Id,
+                    UserName = u.UserName,
+                    Email = u.Email,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    AreaOfResidence = u.AreaOfResidence,
+                    DateOfBirth = u.DateOfBirth,
+                    NextOfKinCOntactInfo = u.NextOfKin.ContactInfo,
+                    Status = u.Status,
+                    TeamNames = u.Teams.Select(t => t.Team.Name).ToList()
+                })
+                .FirstAsync();
+            if (user != null)
             {
-                // Cast the user directly to PlayerModel since we know UserType is "Player"
-                player = (PlayerModel)user;
+                player = user;
 
                 // Define cache options
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
@@ -73,21 +105,34 @@ public class PlayerRepository : IPlayerRepository
 
         return player;
     }
-    public async Task<IEnumerable<PlayerModel>> GetAllPlayersAsync()
+    public async Task<IEnumerable<PlayerModelDto>> GetAllPlayersAsync()
     {
         // Define a cache key for all players
-        var cacheKey = "AllPlayerModels";
+        var cacheKey = "AllPlayers";
 
         // Try to get the players from the cache
-        if (!_cache.TryGetValue(cacheKey, out IEnumerable<PlayerModel> playerModels))
+        if (!_cache.TryGetValue(cacheKey, out IEnumerable<PlayerModelDto> players))
         {
-            // If the players are not in the cache, fetch them from the database
-            var players = await _context.Users
-                                        .OfType<PlayerModel>()
-                                        .ToListAsync();
+            // If the players are not in the cache, fetch them from the database using the Players property
+            var users = await Players
+                .Select(p => new PlayerModelDto
+                {
+                    Id = p.Id,
+                    UserName = p.UserName,
+                    Email = p.Email,
+                    FirstName = p.FirstName,
+                    LastName = p.LastName,
+                    AreaOfResidence = p.AreaOfResidence,
+                    DateOfBirth = p.DateOfBirth,
+                    NextOfKinCOntactInfo = p.NextOfKin.ContactInfo,
+                    Status = p.Status,
+                    TeamNames = p.Teams.Select(t => t.Team.Name).ToList() // Assuming TeamModel has a Name property
+                                                                          // Map other properties as needed
+                })
+                .ToListAsync();
 
             // Cast the results to PlayerModel
-            playerModels = players.Cast<PlayerModel>();
+            players = users.Cast<PlayerModelDto>();
 
             // Define cache options
             var cacheEntryOptions = new MemoryCacheEntryOptions()
@@ -95,11 +140,12 @@ public class PlayerRepository : IPlayerRepository
                 .SetPriority(CacheItemPriority.High);
 
             // Save the players in the cache
-            _cache.Set(cacheKey, playerModels, cacheEntryOptions);
+            _cache.Set(cacheKey, players, cacheEntryOptions);
         }
 
-        return playerModels;
+        return players;
     }
+
 
 
     public async Task CreatePlayerAsync(PlayerModel player, string password)
@@ -139,8 +185,8 @@ public class PlayerRepository : IPlayerRepository
     public async Task<bool> UpdatePlayerAsync(PlayerModel player)
     {
         // Check if the player exists and is of UserType "Player"
-        var existingPlayer = await _userManager.FindByIdAsync(player.Id);
-        if (existingPlayer != null && existingPlayer.UserType == "Player")
+        var existingPlayer = await Players.FirstAsync(p => p.Id == player.Id);
+        if (existingPlayer != null)
         {
 
             // Update player in the database
@@ -158,16 +204,16 @@ public class PlayerRepository : IPlayerRepository
 
     public async Task<bool> DeletePlayerAsync(string id)
     {
-        var user = await _userManager.FindByIdAsync(id);
-        // Check if the user exists and is of UserType "Player"
-        if (user != null && user.UserType == "Player")
+        // Use the Players property to find the player
+        var user = await Players.FirstAsync(p => p.Id == id);
+        if (user != null)
         {
             var result = await _userManager.DeleteAsync(user);
             _cache.Remove($"PlayerModel:{id}"); // Clear the cache for the specific player
             _cache.Remove("AllPlayers"); // Clear the cache for all players
             return result.Succeeded; // Returns true if deletion was successful
         }
-        return false; // User does not exist or is not of UserType "Player"
+        return false; // User does not exist
     }
 
 }

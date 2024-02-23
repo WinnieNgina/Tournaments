@@ -12,8 +12,8 @@ using ModelsLibrary.DataAccess;
 namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240222064815_InitialCreation")]
-    partial class InitialCreation
+    [Migration("20240223055452_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,22 +54,22 @@ namespace API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ada0ffab-0b8d-4d5b-a243-ca5f124cf33a",
-                            ConcurrencyStamp = "c2907e76-25e0-4c9a-95c3-5415810816c8",
+                            Id = "10a127e6-f993-4f0f-a0a8-73362ec999ca",
+                            ConcurrencyStamp = "ec6e0661-d22a-447c-a8fa-1cb960b26e6d",
                             Name = "Player",
                             NormalizedName = "PLAYER"
                         },
                         new
                         {
-                            Id = "023592d8-6b72-47a5-bc60-bb0043c503e1",
-                            ConcurrencyStamp = "d3a3ac24-5933-42eb-9a11-bc0f07610249",
+                            Id = "099b5799-ec5d-4c87-8b85-5b755e05670f",
+                            ConcurrencyStamp = "c0d275b1-3414-4894-8e62-b29f2a13b832",
                             Name = "Organizer",
                             NormalizedName = "ORGANIZER"
                         },
                         new
                         {
-                            Id = "067bd3d7-4adc-45d3-bb7b-a3a0954e8ea6",
-                            ConcurrencyStamp = "3fcd2245-2a82-4b47-905b-1bd0af9631c2",
+                            Id = "466d36e6-d253-47e7-b5cb-e912c4cb6d83",
+                            ConcurrencyStamp = "2e5508ee-2a19-4e7e-9ac5-bc4c370b170e",
                             Name = "Coach",
                             NormalizedName = "COACH"
                         });
@@ -396,6 +396,9 @@ namespace API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CoachId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Team");
                 });
