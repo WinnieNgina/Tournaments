@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ModelsLibrary.Models;
 
@@ -14,6 +15,7 @@ public class TournamentModel
     /// </summary>
     [MaxLength(256)]
     public required string Name { get; set; }
+    [Column(TypeName = "decimal(18,2)")]
     public decimal EntryFee { get; set; }
     public required int TeamsLimit { get; set; }
     [MaxLength(256)]

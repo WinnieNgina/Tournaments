@@ -1,5 +1,7 @@
 using API.Interfaces;
+using API.Options;
 using API.Services;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -90,9 +92,16 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["JWT:Audience"],
         ValidIssuer = builder.Configuration["JWT:Issuer"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
-        
+
     };
 });
+// Add Email Options Configuration
+builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Email"));
+builder.Services.AddScoped<IEmailService, EmailService>();
+// Add SmtpClient as a transient service
+builder.Services.AddTransient<SmtpClient>();
+
+
 builder.Services.AddMemoryCache();
 var app = builder.Build();
 

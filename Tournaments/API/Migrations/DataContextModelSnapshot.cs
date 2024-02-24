@@ -51,22 +51,22 @@ namespace API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "10a127e6-f993-4f0f-a0a8-73362ec999ca",
-                            ConcurrencyStamp = "ec6e0661-d22a-447c-a8fa-1cb960b26e6d",
+                            Id = "10ae9757-730f-40ac-9251-45341f042b12",
+                            ConcurrencyStamp = "4081357a-c6d3-4dc2-9a3f-e089adc6cda7",
                             Name = "Player",
                             NormalizedName = "PLAYER"
                         },
                         new
                         {
-                            Id = "099b5799-ec5d-4c87-8b85-5b755e05670f",
-                            ConcurrencyStamp = "c0d275b1-3414-4894-8e62-b29f2a13b832",
+                            Id = "9b821d3c-9c6e-4286-b2a8-732e4ebc6e98",
+                            ConcurrencyStamp = "0b1f11ab-c8b9-4a9e-a0df-34797880e1da",
                             Name = "Organizer",
                             NormalizedName = "ORGANIZER"
                         },
                         new
                         {
-                            Id = "466d36e6-d253-47e7-b5cb-e912c4cb6d83",
-                            ConcurrencyStamp = "2e5508ee-2a19-4e7e-9ac5-bc4c370b170e",
+                            Id = "c9abd61e-a491-4738-89e8-8210a95a6828",
+                            ConcurrencyStamp = "9770b4fc-e9a9-43e9-b8b3-fc796ed5737e",
                             Name = "Coach",
                             NormalizedName = "COACH"
                         });

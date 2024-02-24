@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using API.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using API.Interfaces;
-using ModelsLibrary.Models;
+using Microsoft.Extensions.Caching.Memory;
 using ModelsLibrary.DataAccess;
+using ModelsLibrary.Models;
 
 public class CoachRepository : ICoachRepository
 {

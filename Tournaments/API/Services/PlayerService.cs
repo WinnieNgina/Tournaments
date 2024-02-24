@@ -1,5 +1,5 @@
-﻿using API.DTO;
-using API.Interfaces;
+﻿using API.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using ModelsLibrary.Models;
 
 namespace API.Services;
@@ -28,7 +28,7 @@ public class PlayerService : IPlayerService
         return await _playerRepository.GetAllPlayersAsync();
     }
 
-    public async Task<bool> CreatePlayerAsync(PlayerModel player, string password)
+    public async Task<string> CreatePlayerAsync(PlayerModel player, string password)
     {
         return await _playerRepository.CreatePlayerAsync(player, password);
     }
@@ -43,8 +43,12 @@ public class PlayerService : IPlayerService
         return await _playerRepository.DeletePlayerAsync(id);
     }
 
-    public async Task<string> GenerateEmailConfirmationTokenAsync(PlayerModel playerModel)
+    public async Task<string> GenerateEmailConfirmationTokenAsync(string playerId)
     {
-        return await _playerRepository.GenerateEmailConfirmationTokenAsync(playerModel);
+        return await _playerRepository.GenerateEmailConfirmationTokenAsync(playerId);
+    }
+    public async Task<IdentityResult> ConfirmEmailAsync(string playerId, string token)
+    {
+        return await _playerRepository.ConfirmEmailAsync(playerId, token);
     }
 }

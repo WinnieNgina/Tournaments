@@ -1,4 +1,4 @@
-﻿using API.DTO;
+﻿using Microsoft.AspNetCore.Identity;
 using ModelsLibrary.Models;
 
 namespace API.Interfaces;
@@ -8,8 +8,9 @@ public interface IPlayerRepository
     Task<PlayerModel> GetPlayerByIdAsync(string id);
     Task<PlayerModel> GetPlayerByEmailAsync(string email);
     Task<IEnumerable<PlayerModel>> GetAllPlayersAsync();
-    Task<bool> CreatePlayerAsync(PlayerModel player, string password);
+    Task<string> CreatePlayerAsync(PlayerModel player, string password);
     Task<bool> UpdatePlayerAsync(PlayerModel player);
     Task<bool> DeletePlayerAsync(string id);
-    Task<string> GenerateEmailConfirmationTokenAsync(PlayerModel playerModel);
+    Task<string> GenerateEmailConfirmationTokenAsync(string playerId);
+    Task<IdentityResult> ConfirmEmailAsync(string playerId, string token);
 }

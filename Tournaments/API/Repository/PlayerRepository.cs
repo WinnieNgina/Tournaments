@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using API.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using API.Interfaces;
-using ModelsLibrary.Models;
+using Microsoft.Extensions.Caching.Memory;
 using ModelsLibrary.DataAccess;
+using ModelsLibrary.Models;
 
 public class PlayerRepository : IPlayerRepository
 {
@@ -98,18 +98,18 @@ public class PlayerRepository : IPlayerRepository
 
         return playerModels;
     }
-    public async Task<bool> CreatePlayerAsync(PlayerModel player, string password)
+    public async Task<string> CreatePlayerAsync(PlayerModel player, string password)
     {
-        // Convert PlayerModel to User or ApplicationIdentityUser based on your setup
-        var user = new PlayerModel 
+        // Ensure the player object is correctly set up before creating the user
+        var user = new PlayerModel
         {
-            DateOfBirth = player.DateOfBirth,
-            Status = player.Status,
+            UserName = player.UserName,
+            Email = player.Email,
             FirstName = player.FirstName,
             LastName = player.LastName,
             AreaOfResidence = player.AreaOfResidence,
-            UserName = player.UserName,
-            Email = player.Email,
+            DateOfBirth = player.DateOfBirth,
+            Status = player.Status,
             UserType = "Player" // Assuming UserType is a property in your User class
         };
 
@@ -119,21 +119,25 @@ public class PlayerRepository : IPlayerRepository
         // Check if the user was created successfully
         if (result.Succeeded)
         {
+
             // Remove the cached list of all players
             _cache.Remove("AllPlayerModels");
 
-            // Add the newly created player to the cache 
+            // Add the newly created player to the cache   
             // useful for reducing database calls
             var cacheKey = $"PlayerModel:{user.Id}";
-            _cache.Set(cacheKey, player, TimeSpan.FromMinutes(5));
-            return true;
+            _cache.Set(cacheKey, user, TimeSpan.FromMinutes(5));
+
+            // Return the user's Id
+            return user.Id;
         }
         else
         {
-            // Return false incase of failure
-            return false;
+            // Return null or an empty string to indicate failure
+            return null;
         }
     }
+
 
     public async Task<bool> UpdatePlayerAsync(PlayerModel player)
     {
@@ -168,12 +172,36 @@ public class PlayerRepository : IPlayerRepository
         }
         return false; // User does not exist or is not of UserType "Player"
     }
-    public async Task<string> GenerateEmailConfirmationTokenAsync(PlayerModel playerModel)
+    public async Task<string> GenerateEmailConfirmationTokenAsync(string playerId)
     {
-        var token = await _userManager.GenerateEmailConfirmationTokenAsync(playerModel);
+        // Find the player by their ID
+        var player = await _userManager.FindByIdAsync(playerId);
+
+        if (player == null)
+        {
+            // Handle the case where the player is not found
+            // This could involve logging the error or throwing an exception
+            throw new ArgumentException("Player not found.", nameof(playerId));
+        }
+
+        // Generate the email confirmation token for the player
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(player);
+
         return token;
-
-
     }
+    public async Task<IdentityResult> ConfirmEmailAsync(string playerId, string token)
+    {
+        // Use the user management system or identity framework to confirm the user's email
+        var player = await _userManager.FindByIdAsync(playerId);
+        if (player == null)
+        {
+            // User not found
+            return IdentityResult.Failed(new IdentityError { Description = "Player not found." });
+        }
 
+        // Use the user management system or identity framework to confirm the user's email
+        var result = await _userManager.ConfirmEmailAsync(player, token);
+
+        return result;
+    }
 }

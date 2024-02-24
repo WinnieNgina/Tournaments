@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ModelsLibrary.Models;
 
@@ -24,6 +25,7 @@ public class PrizeModel
     /// <summary>
     /// Gets or sets the value of the prize.
     /// </summary>
+    [Column(TypeName = "decimal(18,2)")]
     public decimal PrizeAmount { get; set; }
 
     /// <summary>
