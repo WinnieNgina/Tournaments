@@ -25,7 +25,7 @@ public class PlayerController : ControllerBase
     }
     [HttpPost("Register")]
     public async Task<IActionResult> CreatePlayer([FromBody] CreatePlayerDto model)
-    {
+    { 
         var existingPlayerByUserName = await _playerService.GetPlayerByUserNameAsync(model.UserName);
         if (existingPlayerByUserName != null)
         {
