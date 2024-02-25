@@ -178,38 +178,6 @@ public class PlayerRepository : IPlayerRepository
         }
         return false; // User does not exist or is not of UserType "Player"
     }
-    public async Task<string> GenerateEmailConfirmationTokenAsync(string playerId)
-    {
-        // Find the player by their ID
-        var player = await _userManager.FindByIdAsync(playerId);
-
-        if (player == null)
-        {
-            // Handle the case where the player is not found
-            // This could involve logging the error or throwing an exception
-            throw new ArgumentException("Player not found.", nameof(playerId));
-        }
-
-        // Generate the email confirmation token for the player
-        var token = await _userManager.GenerateEmailConfirmationTokenAsync(player);
-
-        return token;
-    }
-    public async Task<IdentityResult> ConfirmEmailAsync(string playerId, string token)
-    {
-        // Use the user management system or identity framework to confirm the user's email
-        var player = await _userManager.FindByIdAsync(playerId);
-        if (player == null)
-        {
-            // User not found
-            return IdentityResult.Failed(new IdentityError { Description = "Player not found." });
-        }
-
-        // Use the user management system or identity framework to confirm the user's email
-        var result = await _userManager.ConfirmEmailAsync(player, token);
-
-        return result;
-    }
     public async Task<PlayerModel> GetPlayerByUserNameAsync(string userName)
     {
         // Define a cache key based on the player email
@@ -234,74 +202,5 @@ public class PlayerRepository : IPlayerRepository
             }
         }
         return player;
-    }
-    public async Task<bool> CheckPasswordAsync(string playerId, string password)
-    {
-        var player = await _userManager.FindByIdAsync(playerId);
-        var result = await _signInManager.CheckPasswordSignInAsync(player, password, false);
-        return result.Succeeded;
-
-    }
-    public async Task<string> GenerateTwoFactorTokenAsync(string playerId)
-    {
-        var player = await _userManager.FindByIdAsync(playerId);
-        return await _userManager.GenerateTwoFactorTokenAsync(player, _userManager.Options.Tokens.AuthenticatorTokenProvider);
-    }
-    public async Task<string> GenerateAuthTokenAsync(string playerId)
-    {
-        // Generated the authentication token using JWT (JSON Web Tokens)
-        var player = await _userManager.FindByIdAsync(playerId);
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(new Claim[]
-            {
-                    new Claim(ClaimTypes.Name, player.UserName),
-                    new Claim(ClaimTypes.Email, player.Email),
-                    new Claim(ClaimTypes.NameIdentifier,player.Id),
-                    new Claim(JwtRegisteredClaimNames.Iss, _configuration["Jwt:Issuer"]),
-                    new Claim(JwtRegisteredClaimNames.Aud, _configuration["Jwt:Audience"])
-            }),
-            Expires = DateTime.UtcNow.AddHours(1),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        };
-
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        var tokenString = tokenHandler.WriteToken(token);
-
-        return tokenString;
-    }
-    public async Task EnableTwoFactorAuthenticationAsync(string playerId)
-    {
-        var player = await _userManager.FindByIdAsync(playerId);
-        await _userManager.SetTwoFactorEnabledAsync(player, true);
-    }
-
-    public async Task DisableTwoFactorAuthenticationAsync(string playerId)
-    {
-        var player = await _userManager.FindByIdAsync(playerId);
-        await _userManager.SetTwoFactorEnabledAsync(player, false);
-    }
-    public async Task LogoutAsync()
-    {
-        await _signInManager.SignOutAsync();
-    }
-    public async Task<bool> CheckCurrentPasswordAsync(string playerId, string currentPassword)
-    {
-        var player = await _userManager.FindByIdAsync(playerId);
-        return await _userManager.CheckPasswordAsync(player, currentPassword);
-    }
-    public async Task<IdentityResult> ChangePasswordAsync(string playerId, string currentPassword, string newPassword)
-    {
-        var player = await _userManager.FindByIdAsync(playerId);
-        return await _userManager.ChangePasswordAsync(player, currentPassword, newPassword);
-    }
-    public async Task SignInAsync(string playerId, bool isPersistent)
-    {
-        var player = await _userManager.FindByIdAsync(playerId);
-        await _signInManager.SignInAsync(player, isPersistent);
     }
 }

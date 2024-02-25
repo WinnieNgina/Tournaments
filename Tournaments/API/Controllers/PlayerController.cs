@@ -130,7 +130,8 @@ public class PlayerController : ControllerBase
     [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] LoginDTO model)
     {
-        var player = await _playerService.GetPlayerByEmailAsync(model.Email);
+        var player = await _playerService.GetPlayerByEmailAsync(model.Email) ??
+            await _playerService.GetPlayerByUserNameAsync(model.UserName);
 
         if (player == null)
         {
@@ -247,7 +248,6 @@ public class PlayerController : ControllerBase
         {
             ModelState.AddModelError(string.Empty, error.Description);
         }
-
         return BadRequest(ModelState);
     }
 

@@ -1,6 +1,5 @@
 ﻿using API.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.OpenApi.Writers;
 using ModelsLibrary.Models;
 
 namespace API.Services;
@@ -8,10 +7,12 @@ namespace API.Services;
 public class PlayerService : IPlayerService
 {
     private readonly IPlayerRepository _playerRepository;
+    private readonly IUserRepository _userRepository;
 
-    public PlayerService(IPlayerRepository playerRepository)
+    public PlayerService(IPlayerRepository playerRepository, IUserRepository userRepository)
     {
         _playerRepository = playerRepository;
+        _userRepository = userRepository;
     }
 
     public async Task<PlayerModel> GetPlayerByIdAsync(string id)
@@ -46,11 +47,11 @@ public class PlayerService : IPlayerService
 
     public async Task<string> GenerateEmailConfirmationTokenAsync(string playerId)
     {
-        return await _playerRepository.GenerateEmailConfirmationTokenAsync(playerId);
+        return await _userRepository.GenerateEmailConfirmationTokenAsync(playerId);
     }
     public async Task<IdentityResult> ConfirmEmailAsync(string playerId, string token)
     {
-        return await _playerRepository.ConfirmEmailAsync(playerId, token);
+        return await _userRepository.ConfirmEmailAsync(playerId, token);
     }
     public async Task<PlayerModel> GetPlayerByUserNameAsync(string userName)
     {
@@ -58,38 +59,38 @@ public class PlayerService : IPlayerService
     }
     public async Task<bool> CheckPasswordAsync(string playerId, string password)
     {
-        return await _playerRepository.CheckPasswordAsync(playerId, password);
+        return await _userRepository.CheckPasswordAsync(playerId, password);
     }
     public async Task<string> GenerateTwoFactorTokenAsync(string playerId)
     {
-        return await _playerRepository.GenerateTwoFactorTokenAsync(playerId);
+        return await _userRepository.GenerateTwoFactorTokenAsync(playerId);
     }
     public async Task<string> GenerateAuthTokenAsync(string playerId)
     {
-        return await _playerRepository.GenerateAuthTokenAsync(playerId);
+        return await _userRepository.GenerateAuthTokenAsync(playerId);
     }
     public async Task EnableTwoFactorAuthenticationAsync(string playerId)
     {
-        await _playerRepository.EnableTwoFactorAuthenticationAsync(playerId) ;
+        await _userRepository.EnableTwoFactorAuthenticationAsync(playerId) ;
     }
     public async Task DisableTwoFactorAuthenticationAsync(string playerId)
     {
-        await _playerRepository.DisableTwoFactorAuthenticationAsync(playerId) ;
+        await _userRepository.DisableTwoFactorAuthenticationAsync(playerId) ;
     }
     public async Task LogoutAsync()
     {
-        await _playerRepository.LogoutAsync() ;
+        await _userRepository.LogoutAsync() ;
     }
     public async Task<bool> CheckCurrentPasswordAsync(string playerId, string currentPassword)
     {
-        return await _playerRepository.CheckCurrentPasswordAsync(playerId, currentPassword);
+        return await _userRepository.CheckCurrentPasswordAsync(playerId, currentPassword);
     }
     public async Task<IdentityResult> ChangePasswordAsync(string playerId, string currentPassword, string newPassword)
     {
-        return await _playerRepository.ChangePasswordAsync(playerId, currentPassword, newPassword);
+        return await _userRepository.ChangePasswordAsync(playerId, currentPassword, newPassword);
     }
     public async Task SignInAsync(string playerId, bool isPersistent)
     {
-        await _playerRepository.SignInAsync(playerId, isPersistent);
+        await _userRepository.SignInAsync(playerId, isPersistent);
     }
 }
