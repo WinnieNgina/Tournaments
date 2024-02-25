@@ -2,8 +2,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.IdentityModel.Tokens;
 using ModelsLibrary.DataAccess;
 using ModelsLibrary.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 public class PlayerRepository : IPlayerRepository
 {
@@ -11,13 +15,15 @@ public class PlayerRepository : IPlayerRepository
     private readonly SignInManager<User> _signInManager;
     private readonly DataContext _context;
     private readonly IMemoryCache _cache;
+    private readonly IConfiguration _configuration;
 
-    public PlayerRepository(UserManager<User> userManager, SignInManager<User> signInManager, DataContext context, IMemoryCache cache)
+    public PlayerRepository(UserManager<User> userManager, SignInManager<User> signInManager, DataContext context, IMemoryCache cache, IConfiguration configuration)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _context = context;
         _cache = cache;
+        _configuration = configuration;
     }
 
     public async Task<PlayerModel> GetPlayerByIdAsync(string id)
@@ -203,5 +209,99 @@ public class PlayerRepository : IPlayerRepository
         var result = await _userManager.ConfirmEmailAsync(player, token);
 
         return result;
+    }
+    public async Task<PlayerModel> GetPlayerByUserNameAsync(string userName)
+    {
+        // Define a cache key based on the player email
+        var cacheKey = $"PlayerModel:{userName}";
+
+        // Try to get the player from the cache
+        if (!_cache.TryGetValue(cacheKey, out PlayerModel player))
+        {
+            // If the player is not in the cache, fetch it from the database
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user != null && user.UserType == "Player")
+            {
+                player = (PlayerModel)user;
+
+                // Define cache options
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5)) // Cache expiration
+                    .SetPriority(CacheItemPriority.Normal);
+
+                // Save the player in the cache
+                _cache.Set(cacheKey, player, cacheEntryOptions);
+            }
+        }
+        return player;
+    }
+    public async Task<bool> CheckPasswordAsync(string playerId, string password)
+    {
+        var player = await _userManager.FindByIdAsync(playerId);
+        var result = await _signInManager.CheckPasswordSignInAsync(player, password, false);
+        return result.Succeeded;
+
+    }
+    public async Task<string> GenerateTwoFactorTokenAsync(string playerId)
+    {
+        var player = await _userManager.FindByIdAsync(playerId);
+        return await _userManager.GenerateTwoFactorTokenAsync(player, _userManager.Options.Tokens.AuthenticatorTokenProvider);
+    }
+    public async Task<string> GenerateAuthTokenAsync(string playerId)
+    {
+        // Generated the authentication token using JWT (JSON Web Tokens)
+        var player = await _userManager.FindByIdAsync(playerId);
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new Claim[]
+            {
+                    new Claim(ClaimTypes.Name, player.UserName),
+                    new Claim(ClaimTypes.Email, player.Email),
+                    new Claim(ClaimTypes.NameIdentifier,player.Id),
+                    new Claim(JwtRegisteredClaimNames.Iss, _configuration["Jwt:Issuer"]),
+                    new Claim(JwtRegisteredClaimNames.Aud, _configuration["Jwt:Audience"])
+            }),
+            Expires = DateTime.UtcNow.AddHours(1),
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var tokenString = tokenHandler.WriteToken(token);
+
+        return tokenString;
+    }
+    public async Task EnableTwoFactorAuthenticationAsync(string playerId)
+    {
+        var player = await _userManager.FindByIdAsync(playerId);
+        await _userManager.SetTwoFactorEnabledAsync(player, true);
+    }
+
+    public async Task DisableTwoFactorAuthenticationAsync(string playerId)
+    {
+        var player = await _userManager.FindByIdAsync(playerId);
+        await _userManager.SetTwoFactorEnabledAsync(player, false);
+    }
+    public async Task LogoutAsync()
+    {
+        await _signInManager.SignOutAsync();
+    }
+    public async Task<bool> CheckCurrentPasswordAsync(string playerId, string currentPassword)
+    {
+        var player = await _userManager.FindByIdAsync(playerId);
+        return await _userManager.CheckPasswordAsync(player, currentPassword);
+    }
+    public async Task<IdentityResult> ChangePasswordAsync(string playerId, string currentPassword, string newPassword)
+    {
+        var player = await _userManager.FindByIdAsync(playerId);
+        return await _userManager.ChangePasswordAsync(player, currentPassword, newPassword);
+    }
+    public async Task SignInAsync(string playerId, bool isPersistent)
+    {
+        var player = await _userManager.FindByIdAsync(playerId);
+        await _signInManager.SignInAsync(player, isPersistent);
     }
 }

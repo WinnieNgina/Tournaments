@@ -100,8 +100,6 @@ builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Email
 builder.Services.AddScoped<IEmailService, EmailService>();
 // Add SmtpClient as a transient service
 builder.Services.AddTransient<SmtpClient>();
-
-
 builder.Services.AddMemoryCache();
 var app = builder.Build();
 
