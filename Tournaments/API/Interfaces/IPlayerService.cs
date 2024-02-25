@@ -22,4 +22,5 @@ public interface IPlayerService
     Task<bool> CheckCurrentPasswordAsync(string playerId, string currentPassword);
     Task<IdentityResult> ChangePasswordAsync(string playerId, string currentPassword, string newPassword);
     Task SignInAsync(string playerId, bool isPersistent);
+    Task<bool> IsPasswordValidAsync(string password);
 }

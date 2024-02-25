@@ -93,4 +93,8 @@ public class PlayerService : IPlayerService
     {
         await _userRepository.SignInAsync(playerId, isPersistent);
     }
+    public async Task<bool> IsPasswordValidAsync(string password)
+    {
+        return await _userRepository.IsPasswordValidAsync(password);
+    }
 }

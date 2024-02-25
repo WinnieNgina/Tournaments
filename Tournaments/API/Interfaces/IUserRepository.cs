@@ -15,5 +15,6 @@ namespace API.Interfaces
         Task LogoutAsync();
         Task<bool> CheckCurrentPasswordAsync(string userId, string currentPassword);
         Task<IdentityResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword);
+        Task<bool> IsPasswordValidAsync(string password);
     }
 }

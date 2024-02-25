@@ -26,6 +26,22 @@ public class PlayerController : ControllerBase
     [HttpPost("Register")]
     public async Task<IActionResult> CreatePlayer([FromBody] CreatePlayerDto model)
     {
+        var existingPlayerByUserName = await _playerService.GetPlayerByUserNameAsync(model.UserName);
+        if (existingPlayerByUserName != null)
+        {
+            return BadRequest(new { Message = "The username is already taken. Please choose a different username." });
+        }
+        // Check if the email is already linked to an account
+        var existingPlayerByEmail = await _playerService.GetPlayerByEmailAsync(model.Email);
+        if (existingPlayerByEmail != null)
+        {
+            return BadRequest(new { Message = "An account with this email already exists. Please log in." });
+        }
+        // Validate the password against requirements
+        if (!await _playerService.IsPasswordValidAsync(model.Password))
+        {
+            return BadRequest(new { Message = "The password does not meet the requirements. It must be at least  8 characters long, contain uppercase and lowercase letters, numbers, and special characters." });
+        }
         // Convert PlayerModelDto to PlayerModel
         var player = new PlayerModel
         {
@@ -43,15 +59,11 @@ public class PlayerController : ControllerBase
         {
             // Generate email confirmation token
             var token = await _playerService.GenerateEmailConfirmationTokenAsync(playerId);
-            Console.WriteLine($"Player ID: {player.Id}");
-            Console.WriteLine($"Token: {token}");
             var callbackUrl = Url.Action("ConfirmEmail", "Player", new
             {
                 playerId = Uri.EscapeDataString(playerId),
                 token = token // Do not use Uri.EscapeDataString for token here
             }, "https", Request.Host.Value);
-            Console.WriteLine($"Callback URL: {callbackUrl}");
-
             // Send confirmation email
             var subject = "Confirm your email";
 
@@ -65,8 +77,6 @@ public class PlayerController : ControllerBase
 
             return Ok("User created successfully");
         }
-
-        // Include error details in the response
         return BadRequest(new { Message = "Failed to create user" });
     }
     [HttpPost("ConfirmEmail")]

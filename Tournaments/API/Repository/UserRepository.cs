@@ -126,5 +126,12 @@ namespace API.Repository
             var user = await _userManager.FindByIdAsync(userId);
             return await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
         }
+        public async Task<bool> IsPasswordValidAsync(string password)
+        {
+            // Assuming _userManager is an instance of UserManager<User> that is already injected into your controller
+            var result = await _userManager.PasswordValidators.First().ValidateAsync(_userManager, null, password);
+            return result.Succeeded;
+        }
+
     }
 }
