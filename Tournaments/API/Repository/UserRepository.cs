@@ -77,7 +77,7 @@ namespace API.Repository
         public async Task<string> GenerateAuthTokenAsync(string userId)
         {
             // Generated the authentication token using JWT (JSON Web Tokens)
-            var user= await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
@@ -132,6 +132,10 @@ namespace API.Repository
             var result = await _userManager.PasswordValidators.First().ValidateAsync(_userManager, null, password);
             return result.Succeeded;
         }
-
+        public async Task<IdentityResult> AddToRoleAsync(string userId, string roleName)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            return await _userManager.AddToRoleAsync(user, roleName);
+        }
     }
 }

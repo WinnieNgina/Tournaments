@@ -16,5 +16,6 @@ namespace API.Interfaces
         Task<bool> CheckCurrentPasswordAsync(string userId, string currentPassword);
         Task<IdentityResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword);
         Task<bool> IsPasswordValidAsync(string password);
+        Task<IdentityResult> AddToRoleAsync(string userId, string roleName);
     }
 }

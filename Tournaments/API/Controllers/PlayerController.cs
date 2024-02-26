@@ -1,6 +1,6 @@
 ﻿using API.DTO;
 using API.Interfaces;
-using Microsoft.AspNetCore.Authorization;
+using API.Validators;
 using Microsoft.AspNetCore.Mvc;
 using ModelsLibrary.Models;
 
@@ -12,10 +12,14 @@ public class PlayerController : ControllerBase
 {
     private readonly IPlayerService _playerService;
     private readonly IEmailService _emailService;
-    public PlayerController(IPlayerService playerService, IEmailService emailService)
+    private readonly IRegistrationValidator _registrationValidator;
+    private readonly ILoginValidator _loginValidator;
+    public PlayerController(IPlayerService playerService, IEmailService emailService, IRegistrationValidator registrationValidator, ILoginValidator loginValidator)
     {
         _playerService = playerService;
         _emailService = emailService;
+        _registrationValidator = registrationValidator;
+        _loginValidator = loginValidator;
     }
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PlayerModelDto>>> GetAllPlayers()
@@ -25,22 +29,15 @@ public class PlayerController : ControllerBase
     }
     [HttpPost("Register")]
     public async Task<IActionResult> CreatePlayer([FromBody] CreatePlayerDto model)
-    { 
-        var existingPlayerByUserName = await _playerService.GetPlayerByUserNameAsync(model.UserName);
-        if (existingPlayerByUserName != null)
+    {
+        if (!ModelState.IsValid)
         {
-            return BadRequest(new { Message = "The username is already taken. Please choose a different username." });
+            return BadRequest(ModelState);
         }
-        // Check if the email is already linked to an account
-        var existingPlayerByEmail = await _playerService.GetPlayerByEmailAsync(model.Email);
-        if (existingPlayerByEmail != null)
+        var validationResult = await _registrationValidator.ValidateAsync(model);
+        if (!validationResult.IsValid)
         {
-            return BadRequest(new { Message = "An account with this email already exists. Please log in." });
-        }
-        // Validate the password against requirements
-        if (!await _playerService.IsPasswordValidAsync(model.Password))
-        {
-            return BadRequest(new { Message = "The password does not meet the requirements. It must be at least  8 characters long, contain uppercase and lowercase letters, numbers, and special characters." });
+            return BadRequest(validationResult.Errors);
         }
         // Convert PlayerModelDto to PlayerModel
         var player = new PlayerModel
@@ -57,6 +54,8 @@ public class PlayerController : ControllerBase
         var playerId = await _playerService.CreatePlayerAsync(player, password);
         if (playerId != null)
         {
+            var role = "Player";
+            await _playerService.AddToRoleAsync(playerId, role);
             // Generate email confirmation token
             var token = await _playerService.GenerateEmailConfirmationTokenAsync(playerId);
             var callbackUrl = Url.Action("ConfirmEmail", "Player", new
@@ -140,47 +139,44 @@ public class PlayerController : ControllerBase
     [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] LoginDTO model)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var validationResult = await _loginValidator.ValidateAsync(model);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+
+        // Assuming _playerService.GetPlayerByEmailAsync and _playerService.GetPlayerByUserNameAsync
+        // return the same type of player object, we can simplify the retrieval process.
         var player = await _playerService.GetPlayerByEmailAsync(model.Email) ??
-            await _playerService.GetPlayerByUserNameAsync(model.UserName);
+                     await _playerService.GetPlayerByUserNameAsync(model.UserName);
 
-        if (player == null)
+        // At this point, we know the player exists and their email is confirmed,
+        // and the password has been validated. Proceed with the login process.
+
+        if (player.TwoFactorEnabled)
         {
-            // User not found
-            return BadRequest("Invalid email");
+            // Two-factor authentication is enabled
+            var otpToken = await _playerService.GenerateTwoFactorTokenAsync(player.Id);
+            var emailSubject = "Your Login OTP Code";
+            var emailMessage = $"Your OTP code is: {otpToken}";
+
+            await _emailService.SendEmailAsync(player.Email, emailSubject, emailMessage);
+
+            // Optionally, you may return a message to inform the user
+            return Ok("Please check your email for the OTP code.");
         }
 
-        if (!player.EmailConfirmed)
-        {
-            // User's email is not confirmed
-            return BadRequest("Please confirm your email before logging in");
-        }
-
-        var result = await _playerService.CheckPasswordAsync(player.Id, model.Password);
-
-        if (result)
-        {
-            // Password is correct
-            if (player.TwoFactorEnabled)
-            {
-                // Two-factor authentication is enabled
-                var otpToken = await _playerService.GenerateTwoFactorTokenAsync(player.Id);
-                var emailSubject = "Your Login OTP Code";
-                var emailMessage = $"Your OTP code is: {otpToken}";
-
-                await _emailService.SendEmailAsync(player.Email, emailSubject, emailMessage);
-
-                // Optionally, you may return a message to inform the user
-                return Ok("Please check your email for the OTP code.");
-            }
-
-            // 2FA is not enabled, generate and return the authentication token
-            var token = _playerService.GenerateAuthTokenAsync(player.Id);
-            return Ok(new { Token = token });
-        }
-
-        // Invalid password
-        return BadRequest("Invalid password");
+        // Two-factor authentication is not enabled, generate and return the authentication token
+        var token = await _playerService.GenerateAuthTokenAsync(player.Id);
+        return Ok(new { Token = token });
     }
+
+
     [HttpPost("{email}/Enable2FA")]
     public async Task<IActionResult> EnableTwoFactorAuthentication(string email)
     {

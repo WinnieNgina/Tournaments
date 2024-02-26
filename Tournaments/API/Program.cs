@@ -1,7 +1,9 @@
+using API.DTO;
 using API.Interfaces;
 using API.Options;
 using API.Repository;
 using API.Services;
+using API.Validators;
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -20,6 +22,8 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
 builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRegistrationValidator, RegistrationValidator>();
+builder.Services.AddScoped<ILoginValidator, LoginValidator>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

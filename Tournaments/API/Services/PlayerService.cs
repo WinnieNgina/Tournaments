@@ -71,15 +71,15 @@ public class PlayerService : IPlayerService
     }
     public async Task EnableTwoFactorAuthenticationAsync(string playerId)
     {
-        await _userRepository.EnableTwoFactorAuthenticationAsync(playerId) ;
+        await _userRepository.EnableTwoFactorAuthenticationAsync(playerId);
     }
     public async Task DisableTwoFactorAuthenticationAsync(string playerId)
     {
-        await _userRepository.DisableTwoFactorAuthenticationAsync(playerId) ;
+        await _userRepository.DisableTwoFactorAuthenticationAsync(playerId);
     }
     public async Task LogoutAsync()
     {
-        await _userRepository.LogoutAsync() ;
+        await _userRepository.LogoutAsync();
     }
     public async Task<bool> CheckCurrentPasswordAsync(string playerId, string currentPassword)
     {
@@ -96,5 +96,9 @@ public class PlayerService : IPlayerService
     public async Task<bool> IsPasswordValidAsync(string password)
     {
         return await _userRepository.IsPasswordValidAsync(password);
+    }
+    public async Task<IdentityResult> AddToRoleAsync(string playerId, string roleName)
+    {
+        return await _userRepository.AddToRoleAsync(playerId, roleName);
     }
 }

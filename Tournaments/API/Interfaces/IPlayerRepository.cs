@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using ModelsLibrary.Models;
+﻿using ModelsLibrary.Models;
 
 namespace API.Interfaces;
 
