@@ -6,10 +6,10 @@ namespace API.DTO
     {
         [EmailAddress]
         [Display(Name = "Email Address")]
-        public string Email { get; set; }
+        public string? Email { get; set; } = null;
 
         [Display(Name = "User Name")]
-        public string UserName { get; set; }
+        public string? UserName { get; set; } = null;
 
         [Required]
         [DataType(DataType.Password)]

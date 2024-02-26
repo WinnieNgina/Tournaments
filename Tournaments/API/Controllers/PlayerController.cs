@@ -152,8 +152,7 @@ public class PlayerController : ControllerBase
 
         // Assuming _playerService.GetPlayerByEmailAsync and _playerService.GetPlayerByUserNameAsync
         // return the same type of player object, we can simplify the retrieval process.
-        var player = await _playerService.GetPlayerByEmailAsync(model.Email) ??
-                     await _playerService.GetPlayerByUserNameAsync(model.UserName);
+        var player = model.Email != null ? await _playerService.GetPlayerByEmailAsync(model.Email) : await _playerService.GetPlayerByUserNameAsync(model.UserName);
 
         // At this point, we know the player exists and their email is confirmed,
         // and the password has been validated. Proceed with the login process.
