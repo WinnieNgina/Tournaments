@@ -1,4 +1,5 @@
-﻿using API.Interfaces;
+﻿using API.DTO;
+using API.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using ModelsLibrary.Models;
 
@@ -25,7 +26,7 @@ public class PlayerService : IPlayerService
         return await _playerRepository.GetPlayerByEmailAsync(email);
     }
 
-    public async Task<IEnumerable<PlayerModel>> GetAllPlayersAsync()
+    public async Task<IEnumerable<PlayerDTO>> GetAllPlayersAsync()
     {
         return await _playerRepository.GetAllPlayersAsync();
     }

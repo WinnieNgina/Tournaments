@@ -22,7 +22,7 @@ public class PlayerController : ControllerBase
         _loginValidator = loginValidator;
     }
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<PlayerModelDto>>> GetAllPlayers()
+    public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetAllPlayers()
     {
         var players = await _playerService.GetAllPlayersAsync();
         return Ok(players);
@@ -122,7 +122,17 @@ public class PlayerController : ControllerBase
         }
         // Return a DTO or a model with the user's information
         return Ok(new { user.Id, user.UserName, user.Email });
-
+    }
+    [HttpGet("{userName}/GetUserByName")]
+    public async Task<IActionResult> GetPlayerByName(string userName)
+    {
+        var user = await _playerService.GetPlayerByUserNameAsync(userName);
+        if (user == null)
+        {
+            return NotFound(); // User not found
+        }
+        // Return a DTO or a model with the user's information
+        return Ok(new { user.Id, user.UserName, user.Email });
     }
     [HttpGet("{email}/GetUserByEmail")]
     public async Task<IActionResult> GetPlayerByEmail(string email)
@@ -174,8 +184,6 @@ public class PlayerController : ControllerBase
         var token = await _playerService.GenerateAuthTokenAsync(player.Id);
         return Ok(new { Token = token });
     }
-
-
     [HttpPost("{email}/Enable2FA")]
     public async Task<IActionResult> EnableTwoFactorAuthentication(string email)
     {

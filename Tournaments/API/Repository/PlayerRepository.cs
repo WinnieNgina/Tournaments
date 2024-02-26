@@ -1,4 +1,5 @@
-﻿using API.Interfaces;
+﻿using API.DTO;
+using API.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -73,33 +74,44 @@ public class PlayerRepository : IPlayerRepository
         }
         return player;
     }
-    public async Task<IEnumerable<PlayerModel>> GetAllPlayersAsync()
+    public async Task<IEnumerable<PlayerDTO>> GetAllPlayersAsync()
     {
         // Define a cache key for all players
         var cacheKey = "AllPlayers";
 
         // Try to get the players from the cache
-        if (!_cache.TryGetValue(cacheKey, out IEnumerable<PlayerModel> playerModels))
+        if (!_cache.TryGetValue(cacheKey, out IEnumerable<PlayerDTO> playerDTOs))
         {
             // If the players are not in the cache, fetch them from the database
             var players = await _context.Users
                                         .OfType<PlayerModel>()
+                                        .Select(p => new PlayerDTO
+                                        {
+                                            Id = p.Id,
+                                            UserName = p.UserName,
+                                            Email = p.Email,
+                                            FirstName = p.FirstName,
+                                            LastName = p.LastName,
+                                            AreaOfResidence = p.AreaOfResidence,
+                                            DateOfBirth = p.DateOfBirth,
+                                            Status = p.Status,
+                                        })
+                                        .AsNoTracking()
                                         .ToListAsync();
-
-            // Cast the results to CoachModel
-            playerModels = players.Cast<PlayerModel>();
 
             // Define cache options
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 .SetSlidingExpiration(TimeSpan.FromMinutes(5)) // Cache expiration
                 .SetPriority(CacheItemPriority.High);
 
-            // Save the coaches in the cache
-            _cache.Set(cacheKey, playerModels, cacheEntryOptions);
+            // Save the players in the cache
+            _cache.Set(cacheKey, players, cacheEntryOptions);
+            playerDTOs = players;
         }
 
-        return playerModels;
+        return playerDTOs;
     }
+
     public async Task<string> CreatePlayerAsync(PlayerModel player, string password)
     {
         // Ensure the player object is correctly set up before creating the user

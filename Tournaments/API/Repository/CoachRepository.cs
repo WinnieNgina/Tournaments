@@ -1,4 +1,5 @@
-﻿using API.Interfaces;
+﻿using API.DTO;
+using API.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -73,35 +74,45 @@ public class CoachRepository : ICoachRepository
 
         return coach;
     }
-    public async Task<IEnumerable<CoachModel>> GetAllCoachesAsync()
+    public async Task<IEnumerable<CoachDTO>> GetAllCoachesAsync()
     {
         // Define a cache key for all coaches
         var cacheKey = "AllCoachModels";
 
         // Try to get the coaches from the cache
-        if (!_cache.TryGetValue(cacheKey, out IEnumerable<CoachModel> coachModels))
+        if (!_cache.TryGetValue(cacheKey, out IEnumerable<CoachDTO> coachDTOs))
         {
             // If the coaches are not in the cache, fetch them from the database
+            // Select only necessary fields and use AsNoTracking for performance
             var coaches = await _context.Users
                                         .OfType<CoachModel>()
+                                        .Select(c => new CoachDTO
+                                        {
+                                            Id = c.Id,
+                                            UserName = c.UserName,
+                                            FirstName = c.FirstName,
+                                            LastName = c.LastName,
+                                            Email = c.Email,
+                                            AreaOfResidence = c.AreaOfResidence,
+                                            YearsOfExperience = c.YearsOfExperience,
+                                            SocialMediaUrl = c.SocialMediaUrl,
+                                            CoachingSpecialization = c.CoachingSpecialization,
+                                            Achievements = c.Achievements,
+                                            // Map other necessary fields if needed
+                                        })
+                                        .AsNoTracking()
                                         .ToListAsync();
 
-            // Cast the results to CoachModel
-            coachModels = coaches.Cast<CoachModel>();
-
-            // Define cache options
-            var cacheEntryOptions = new MemoryCacheEntryOptions()
-                .SetSlidingExpiration(TimeSpan.FromMinutes(5)) // Cache expiration
-                .SetPriority(CacheItemPriority.High);
-
             // Save the coaches in the cache
-            _cache.Set(cacheKey, coachModels, cacheEntryOptions);
+            _cache.Set(cacheKey, coaches, new MemoryCacheEntryOptions()
+                .SetSlidingExpiration(TimeSpan.FromMinutes(5)) // Cache expiration
+                .SetPriority(CacheItemPriority.High));
+
+            coachDTOs = coaches;
         }
 
-        return coachModels;
+        return coachDTOs;
     }
-
-
     public async Task CreateCoachAsync(CoachModel coach, string password)
     {
         // Convert CoachModel to User or ApplicationIdentityUser based on your setup
