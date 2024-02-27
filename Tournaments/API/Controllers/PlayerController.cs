@@ -13,13 +13,13 @@ public class PlayerController : ControllerBase
     private readonly IPlayerService _playerService;
     private readonly IEmailService _emailService;
     private readonly IRegistrationValidator _registrationValidator;
-    private readonly ILoginValidator _loginValidator;
-    public PlayerController(IPlayerService playerService, IEmailService emailService, IRegistrationValidator registrationValidator, ILoginValidator loginValidator)
+    private readonly ILoginValidatorFactory _loginValidatorFactory;
+    public PlayerController(IPlayerService playerService, IEmailService emailService, IRegistrationValidator registrationValidator, ILoginValidatorFactory loginValidatorFactory)
     {
         _playerService = playerService;
         _emailService = emailService;
         _registrationValidator = registrationValidator;
-        _loginValidator = loginValidator;
+        _loginValidatorFactory = loginValidatorFactory;
     }
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetAllPlayers()
@@ -135,7 +135,6 @@ public class PlayerController : ControllerBase
         }
         // Return a DTO or a model with the user's information
         return Ok(new { user.Id, user.UserName, user.Email });
-
     }
     [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] LoginDTO model)
@@ -144,8 +143,9 @@ public class PlayerController : ControllerBase
         {
             return BadRequest(ModelState);
         }
-
-        var validationResult = await _loginValidator.ValidateAsync(model);
+        var role = "Player";
+        var validator = _loginValidatorFactory.CreateValidator(role);
+        var validationResult = await validator.ValidateAsync(model);
         if (!validationResult.IsValid)
         {
             return BadRequest(validationResult.Errors);

@@ -4,6 +4,7 @@ using API.Services;
 using API.Validators;
 using Microsoft.AspNetCore.Mvc;
 using ModelsLibrary.Models;
+using System.Data;
 
 namespace API.Controllers;
 
@@ -14,12 +15,14 @@ public class CoachController : ControllerBase
     private readonly ICoachService _coachService;
     private readonly IEmailService _emailService;
     private readonly ICoachRegistrationValidator _coachRegistrationValidator;
+    private readonly ILoginValidatorFactory _loginValidatorFactory;
 
-    public CoachController(ICoachService coachService, IEmailService emailService, ICoachRegistrationValidator coachRegistrationValidator)
+    public CoachController(ICoachService coachService, IEmailService emailService, ICoachRegistrationValidator coachRegistrationValidator, ILoginValidatorFactory loginValidatorFactory)
     {
         _coachService = coachService;
         _emailService = emailService;
         _coachRegistrationValidator = coachRegistrationValidator;
+        _loginValidatorFactory = loginValidatorFactory;
     }
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CoachDTO>>> GetAllCoaches()
@@ -28,7 +31,7 @@ public class CoachController : ControllerBase
         return Ok(coaches);
     }
     [HttpPost("Register")]
-    public async Task<IActionResult> CreatePlayer([FromBody] SignUpCoachDTO model)
+    public async Task<IActionResult> CreateCoach([FromBody] SignUpCoachDTO model)
     {
         if (!ModelState.IsValid)
         {
@@ -109,4 +112,77 @@ public class CoachController : ControllerBase
         }
     }
 
+    [HttpGet("{coachId}")]
+    public async Task<IActionResult> GetCoach(string coachId)
+    {
+        var user = await _coachService.GetCoachByIdAsync(coachId);
+        if (user == null)
+        {
+            return NotFound(); // User not found
+        }
+        // Return a DTO or a model with the user's information
+        return Ok(new { user.Id, user.UserName, user.Email });
+    }
+    [HttpGet("{name}/GetCoachByName")]
+    public async Task<IActionResult> GetCoachByName(string name)
+    {
+        var user = await _coachService.GetCoachByNameAsync(name);
+        if (user == null)
+        {
+            return NotFound(); // User not found
+        }
+        // Return a DTO or a model with the user's information
+        return Ok(new { user.Id, user.UserName, user.Email });
+    }
+    [HttpGet("{email}/GetCoachByEmail")]
+    public async Task<IActionResult> GetCoachByEmail(string email)
+    {
+        var user = await _coachService.GetCoachByEmailAsync(email);
+        if (user == null)
+        {
+            return NotFound(); // User not found
+        }
+        // Return a DTO or a model with the user's information
+        return Ok(new { user.Id, user.UserName, user.Email });
+    }
+    [HttpPost("Login")]
+    public async Task<IActionResult> Login([FromBody] LoginDTO model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        var role = "Coach";
+        var validator = _loginValidatorFactory.CreateValidator(role);
+
+        var validationResult = await validator.ValidateAsync(model);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+
+        // Assuming _playerService.GetPlayerByEmailAsync and _playerService.GetPlayerByUserNameAsync
+        // return the same type of player object, we can simplify the retrieval process.
+        var player = model.Email != null ? await _coachService.GetCoachByEmailAsync(model.Email) : await _coachService.GetCoachByNameAsync(model.UserName);
+
+        // At this point, we know the player exists and their email is confirmed,
+        // and the password has been validated. Proceed with the login process.
+
+        if (player.TwoFactorEnabled)
+        {
+            // Two-factor authentication is enabled
+            var otpToken = await _coachService.GenerateTwoFactorTokenAsync(player.Id);
+            var emailSubject = "Your Login OTP Code";
+            var emailMessage = $"Your OTP code is: {otpToken}";
+
+            await _emailService.SendEmailAsync(player.Email, emailSubject, emailMessage);
+
+            // Optionally, you may return a message to inform the user
+            return Ok("Please check your email for the OTP code.");
+        }
+
+        // Two-factor authentication is not enabled, generate and return the authentication token
+        var token = await _coachService.GenerateAuthTokenAsync(player.Id);
+        return Ok(new { Token = token });
+    }
 }

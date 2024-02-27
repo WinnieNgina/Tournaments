@@ -4,11 +4,11 @@ using static System.Net.WebRequestMethods;
 
 namespace API.Validators;
 
-public class LoginValidator : ILoginValidator
+public class PlayerLoginValidator : ILoginValidator
 {
     private readonly IPlayerService _playerService;
 
-    public LoginValidator(IPlayerService playerService)
+    public PlayerLoginValidator(IPlayerService playerService)
     {
         _playerService = playerService;
     }

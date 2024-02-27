@@ -15,4 +15,7 @@ public interface ICoachService
     Task<IdentityResult> AddToRoleAsync(string Id, string roleName);
     Task<string> GenerateEmailConfirmationTokenAsync(string Id);
     Task<IdentityResult> ConfirmEmailAsync(string Id, string token);
+    Task<bool> CheckPasswordAsync(string Id, string password);
+    Task<string> GenerateTwoFactorTokenAsync(string Id);
+    Task<string> GenerateAuthTokenAsync(string Id);
 }

@@ -55,5 +55,19 @@ namespace API.Services
         {
             return await _userRepository.ConfirmEmailAsync(Id, token);
         }
+        public async Task<bool> CheckPasswordAsync(string Id, string password)
+        {
+            return await _userRepository.CheckPasswordAsync(Id, password);
+        }
+
+        public async Task<string> GenerateTwoFactorTokenAsync(string Id)
+        {
+            return await _userRepository.GenerateTwoFactorTokenAsync(Id);
+        }
+
+        public async Task<string> GenerateAuthTokenAsync(string Id)
+        {
+            return await _userRepository.GenerateAuthTokenAsync(Id);
+        }
     }
 }
