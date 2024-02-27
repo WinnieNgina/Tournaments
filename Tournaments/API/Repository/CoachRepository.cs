@@ -44,7 +44,31 @@ public class CoachRepository : ICoachRepository
                 _cache.Set(cacheKey, coach, cacheEntryOptions);
             }
         }
+        return coach;
+    }
+    public async Task<CoachModel> GetCoachByNameAsync(string name)
+    {
+        // Define a cache key based on the coach ID
+        var cacheKey = $"CoachModel:{name}";
 
+        // Try to get the coach from the cache
+        if (!_cache.TryGetValue(cacheKey, out CoachModel coach))
+        {
+            // If the coach is not in the cache, fetch it from the database
+            var user = await _userManager.FindByNameAsync(name);
+            if (user != null && user.UserType == "Coach")
+            {
+                coach = (CoachModel)user;
+
+                // Define cache options
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5)) // Cache expiration
+                    .SetPriority(CacheItemPriority.Normal);
+
+                // Save the coach in the cache
+                _cache.Set(cacheKey, coach, cacheEntryOptions);
+            }
+        }
         return coach;
     }
     public async Task<CoachModel> GetCoachByEmailAsync(string email)
@@ -97,6 +121,7 @@ public class CoachRepository : ICoachRepository
                                             YearsOfExperience = c.YearsOfExperience,
                                             SocialMediaUrl = c.SocialMediaUrl,
                                             CoachingSpecialization = c.CoachingSpecialization,
+                                            PhoneNumber = c.PhoneNumber,
                                             Achievements = c.Achievements,
                                             // Map other necessary fields if needed
                                         })
@@ -113,7 +138,7 @@ public class CoachRepository : ICoachRepository
 
         return coachDTOs;
     }
-    public async Task CreateCoachAsync(CoachModel coach, string password)
+    public async Task<string> CreateCoachAsync(CoachModel coach, string password)
     {
         // Convert CoachModel to User or ApplicationIdentityUser based on your setup
         var user = new CoachModel
@@ -141,11 +166,12 @@ public class CoachRepository : ICoachRepository
             // This is not necessary for invalidating the cache but can be useful for reducing database calls
             var cacheKey = $"CoachModel:{user.Id}";
             _cache.Set(cacheKey, coach, TimeSpan.FromMinutes(5));
+            return user.Id;
         }
         else
         {
-            // Handle the failure (e.g., throw an exception or return an error)
-            throw new Exception("Failed to add player");
+            // Return null or an empty string to indicate failure
+            return null;
         }
     }
 

@@ -90,14 +90,6 @@ public class PlayerController : ControllerBase
         // Find the user by their ID and
         // Verify the email confirmation token
         var result = await _playerService.ConfirmEmailAsync(decodedUserId, decodedToken);
-
-        // Log the result of the email confirmation
-        Console.WriteLine($"Email confirmation result: {result.Succeeded}");
-        if (!result.Succeeded)
-        {
-            Console.WriteLine($"Email confirmation errors: {string.Join(", ", result.Errors.Select(e => e.Description))}");
-        }
-
         if (result.Succeeded)
         {
             // Email confirmed successfully
@@ -111,7 +103,6 @@ public class PlayerController : ControllerBase
             return BadRequest($"Failed to confirm email: {errorMessages}");
         }
     }
-
     [HttpGet("{playerId}")]
     public async Task<IActionResult> GetPlayer(string playerId)
     {

@@ -7,8 +7,9 @@ public interface ICoachRepository
 {
     Task<CoachModel> GetCoachByIdAsync(string id);
     Task<CoachModel> GetCoachByEmailAsync(string email);
+    Task<CoachModel> GetCoachByNameAsync(string userName);
     Task<IEnumerable<CoachDTO>> GetAllCoachesAsync();
-    Task CreateCoachAsync(CoachModel player, string password);
+    Task<string> CreateCoachAsync(CoachModel coach, string password);
     Task<bool> UpdateCoachAsync(CoachModel player);
     Task<bool> DeleteCoachAsync(string id);
 }
