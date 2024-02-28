@@ -193,8 +193,6 @@ public class CoachRepository : ICoachRepository
 
         return false; // Coach does not exist or is not of UserType "Coach"
     }
-
-
     public async Task<bool> DeleteCoachAsync(string id)
     {
         var user = await _userManager.FindByIdAsync(id);
@@ -208,5 +206,4 @@ public class CoachRepository : ICoachRepository
         }
         return false; // User does not exist or is not of UserType "Coach"
     }
-
 }

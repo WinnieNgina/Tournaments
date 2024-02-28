@@ -69,5 +69,40 @@ namespace API.Services
         {
             return await _userRepository.GenerateAuthTokenAsync(Id);
         }
+
+        public async Task EnableTwoFactorAuthenticationAsync(string Id)
+        {
+            await _userRepository.EnableTwoFactorAuthenticationAsync(Id);
+        }
+
+        public async Task DisableTwoFactorAuthenticationAsync(string Id)
+        {
+            await _userRepository.DisableTwoFactorAuthenticationAsync(Id);
+        }
+
+        public async Task LogoutAsync()
+        {
+            await _userRepository.LogoutAsync();
+        }
+
+        public async Task<bool> DeleteCoachAsync(string id)
+        {
+            return await _coachRepository.DeleteCoachAsync(id);
+        }
+
+        public async Task<bool> CheckCurrentPasswordAsync(string Id, string currentPassword)
+        {
+            return await _userRepository.CheckCurrentPasswordAsync(Id, currentPassword);
+        }
+
+        public async Task<IdentityResult> ChangePasswordAsync(string Id, string currentPassword, string newPassword)
+        {
+           return await _userRepository.ChangePasswordAsync(Id, currentPassword, newPassword);
+        }
+
+        public async Task SignInAsync(string Id, bool isPersistent)
+        {
+            await _userRepository.SignInAsync(Id, isPersistent);
+        }
     }
 }

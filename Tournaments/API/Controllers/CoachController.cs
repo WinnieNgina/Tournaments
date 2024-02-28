@@ -2,6 +2,8 @@
 using API.Interfaces;
 using API.Services;
 using API.Validators;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ModelsLibrary.Models;
 using System.Data;
@@ -160,9 +162,6 @@ public class CoachController : ControllerBase
         {
             return BadRequest(validationResult.Errors);
         }
-
-        // Assuming _playerService.GetPlayerByEmailAsync and _playerService.GetPlayerByUserNameAsync
-        // return the same type of player object, we can simplify the retrieval process.
         var player = model.Email != null ? await _coachService.GetCoachByEmailAsync(model.Email) : await _coachService.GetCoachByNameAsync(model.UserName);
 
         // At this point, we know the player exists and their email is confirmed,
@@ -184,5 +183,96 @@ public class CoachController : ControllerBase
         // Two-factor authentication is not enabled, generate and return the authentication token
         var token = await _coachService.GenerateAuthTokenAsync(player.Id);
         return Ok(new { Token = token });
+    }
+    [HttpPost("{email}/Enable2FA")]
+    public async Task<IActionResult> EnableTwoFactorAuthentication(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            return BadRequest("Email is required.");
+        }
+        var coach = await _coachService.GetCoachByEmailAsync(email);
+
+        if (coach == null)
+        {
+            return NotFound($"Coach not found.");
+        }
+
+        await _coachService.EnableTwoFactorAuthenticationAsync(coach.Id);
+
+        return Ok("Two-factor authentication enabled successfully.");
+    }
+    [HttpPost("{email}/Disable2FA")]
+    public async Task<IActionResult> DisableTwoFactorAuthentication(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            return BadRequest("Email is required.");
+        }
+        var coach = await _coachService.GetCoachByEmailAsync(email);
+
+        if (coach == null)
+        {
+            return NotFound($"Player not found.");
+        }
+
+        await _coachService.DisableTwoFactorAuthenticationAsync(coach.Id);
+
+        return Ok("Two-factor authentication disabled successfully.");
+    }
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await _coachService.LogoutAsync();
+        return Ok("Logout successful.");
+    }
+    [HttpDelete("{email}")]
+    public async Task<IActionResult> DeleteCoachAccount(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            return BadRequest("Email is required.");
+        }
+        var coach = await _coachService.GetCoachByEmailAsync(email);
+        if (coach == null)
+        {
+            return NotFound("Coach not found."); // Player not found
+        }
+        var success = await _coachService.DeleteCoachAsync(coach.Id);
+        if (success)
+        {
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            return Ok("Account deleted successfully");
+        }
+        return NotFound("Failed to delete coach account.");
+    }
+    [HttpPost("{email}/ChangePassWord")]
+    public async Task<IActionResult> ChangePassword(string email, ChangePasswordDTO model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        var coach = await _coachService.GetCoachByEmailAsync(email);
+        if (coach == null)
+        {
+            return NotFound($"Coach not found.");
+        }
+        var isCurrentPasswordValid = await _coachService.CheckCurrentPasswordAsync(coach.Id, model.CurrentPassword);
+        if (!isCurrentPasswordValid)
+        {
+            return BadRequest("The current password is incorrect.");
+        }
+        var result = await _coachService.ChangePasswordAsync(coach.Id, model.CurrentPassword, model.NewPassword);
+        if (result.Succeeded)
+        {
+            await _coachService.SignInAsync(coach.Id, isPersistent: false);
+            return Ok("Password changed successfully.");
+        }
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError(string.Empty, error.Description);
+        }
+        return BadRequest(ModelState);
     }
 }

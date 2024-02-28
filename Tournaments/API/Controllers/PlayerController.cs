@@ -1,6 +1,8 @@
 ﻿using API.DTO;
 using API.Interfaces;
 using API.Validators;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ModelsLibrary.Models;
 
@@ -204,7 +206,6 @@ public class PlayerController : ControllerBase
         return Ok("Two-factor authentication disabled successfully.");
     }
     [HttpDelete("{email}")]
-
     public async Task<IActionResult> DeletePlayerAccount(string email)
     {
         var player = await _playerService.GetPlayerByEmailAsync(email);
@@ -215,6 +216,7 @@ public class PlayerController : ControllerBase
         var success = await _playerService.DeletePlayerAsync(player.Id);
         if (success)
         {
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
             return Ok("Account deleted successfully");
         }
         return NotFound("Player not found or failed to delete player");
@@ -254,5 +256,4 @@ public class PlayerController : ControllerBase
         }
         return BadRequest(ModelState);
     }
-
 }

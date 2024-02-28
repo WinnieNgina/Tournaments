@@ -18,4 +18,11 @@ public interface ICoachService
     Task<bool> CheckPasswordAsync(string Id, string password);
     Task<string> GenerateTwoFactorTokenAsync(string Id);
     Task<string> GenerateAuthTokenAsync(string Id);
+    Task EnableTwoFactorAuthenticationAsync(string Id);
+    Task DisableTwoFactorAuthenticationAsync(string Id);
+    Task LogoutAsync();
+    Task<bool> DeleteCoachAsync(string id);
+    Task<bool> CheckCurrentPasswordAsync(string Id, string currentPassword);
+    Task<IdentityResult> ChangePasswordAsync(string Id, string currentPassword, string newPassword);
+    Task SignInAsync(string Id, bool isPersistent);
 }
