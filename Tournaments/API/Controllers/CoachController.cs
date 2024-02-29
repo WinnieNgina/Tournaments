@@ -1,7 +1,5 @@
 ﻿using API.DTO;
 using API.Interfaces;
-using API.Services;
-using API.Validators;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -89,13 +87,13 @@ public class CoachController : ControllerBase
         return BadRequest(new { Message = "Failed to create user" });
     }
     [HttpPost("ConfirmEmail")]
-    public async Task<IActionResult> ConfirmEmail(string playerId, string token)
+    public async Task<IActionResult> ConfirmEmail(string Id, string token)
     {
-        if (string.IsNullOrWhiteSpace(playerId) || string.IsNullOrWhiteSpace(token))
+        if (string.IsNullOrWhiteSpace(Id) || string.IsNullOrWhiteSpace(token))
         {
             return BadRequest("User ID and confirmation code are required.");
         }
-        var decodedUserId = Uri.UnescapeDataString(playerId);
+        var decodedUserId = Uri.UnescapeDataString(Id);
         var decodedToken = Uri.UnescapeDataString(token);
         // Find the user by their ID and
         // Verify the email confirmation token
@@ -197,7 +195,6 @@ public class CoachController : ControllerBase
         {
             return NotFound($"Coach not found.");
         }
-
         await _coachService.EnableTwoFactorAuthenticationAsync(coach.Id);
 
         return Ok("Two-factor authentication enabled successfully.");

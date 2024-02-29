@@ -1,6 +1,8 @@
-﻿namespace API.Interfaces;
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace API.Interfaces;
 
 public interface IEmailService
 {
-    Task SendEmailAsync(string email, string subject, string message);
+    Task<IdentityResult> SendEmailAsync(string email, string subject, string message, bool isHtml = false);
 }

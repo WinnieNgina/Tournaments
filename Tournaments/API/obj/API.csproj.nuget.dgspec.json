@@ -49,6 +49,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "AfricasTalking.NET": {
+              "target": "Package",
+              "version": "[1.2.4, )"
+            },
             "MailKit": {
               "target": "Package",
               "version": "[4.3.0, )"

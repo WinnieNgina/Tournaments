@@ -8,6 +8,7 @@ using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ModelsLibrary.DataAccess;
@@ -17,15 +18,18 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Configuration.AddUserSecrets<Program>();
 builder.Services.AddControllers();
 builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
 builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddScoped<ICoachRepository, CoachRepository>();
 builder.Services.AddScoped<ICoachService, CoachService>();
+builder.Services.AddScoped<IOrganizerRepository, OrganizerRepository>();
+builder.Services.AddScoped<IOrganizerService, OrganizerService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRegistrationValidator, RegistrationValidator>();
 builder.Services.AddScoped<ICoachRegistrationValidator, CoachRegistrationValidator>();
+builder.Services.AddScoped<IOrganizerRegistrationValidator, OrganizerRegistrationValidator>();
 builder.Services.AddScoped<PlayerLoginValidator>();
 builder.Services.AddScoped<CoachLoginValidator>();
 builder.Services.AddScoped<ILoginValidatorFactory, LoginValidatorFactory>();
@@ -67,20 +71,26 @@ builder.Services.AddDbContext<DataContext>(options =>
         b => b.MigrationsAssembly("API"));
 });
 // For Identity
-builder.Services.AddIdentity<User, IdentityRole>(opt =>
+builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     // Password policy
-    opt.Password.RequiredLength = 8;  // Increased minimum required length to 8 characters
-    opt.Password.RequireDigit = true;  // Requires at least one digit
-    opt.Password.RequireNonAlphanumeric = true;  // Require at least one special character
-    opt.Password.RequireUppercase = true;  // Requires at least one uppercase letter
+    options.Password.RequiredLength = 8;  // Increased minimum required length to 8 characters
+    options.Password.RequireDigit = true;  // Requires at least one digit
+    options.Password.RequireNonAlphanumeric = true;  // Require at least one special character
+    options.Password.RequireUppercase = true;  // Requires at least one uppercase letter
+    options.Password.RequireLowercase = true;
+
+    // Lockout settings
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+    options.Lockout.MaxFailedAccessAttempts = 10;
 
     // User requirements
-    opt.User.RequireUniqueEmail = true;
+    options.User.RequireUniqueEmail = true;
 
     // Sign-in requirements
-    opt.SignIn.RequireConfirmedEmail = true;
-    opt.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultEmailProvider;
+    options.SignIn.RequireConfirmedEmail = true;
+    options.SignIn.RequireConfirmedPhoneNumber = true; // Enable phone number confirmation
+    options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultEmailProvider;
 })
 .AddEntityFrameworkStores<DataContext>()
 .AddDefaultTokenProviders();
@@ -108,6 +118,21 @@ builder.Services.AddAuthentication(options =>
 });
 // Add Email Options Configuration
 builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Email"));
+builder.Services.Configure<SmsOptions>(builder.Configuration.GetSection("AfricasTalking"));
+// Configure the API key
+var apiKey = builder.Configuration.GetValue<string>("AfricasTalking:ApiKey");
+// Check if the API key is null or empty
+if (string.IsNullOrEmpty(apiKey))
+{
+    // Handle the case where the API key is not found
+    // For example, you might want to log an error or throw an exception
+    // Here, we're throwing an exception to halt the application startup
+    throw new InvalidOperationException("The AfricaTalking API key is not set in the configuration.");
+}
+
+builder.Services.AddSingleton(apiKey);
+// Register SmsService
+builder.Services.AddScoped<ISmsService, SmsService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 // Add SmtpClient as a transient service
 builder.Services.AddTransient<SmtpClient>();

@@ -10,6 +10,6 @@ public interface ICoachRepository
     Task<CoachModel> GetCoachByNameAsync(string userName);
     Task<IEnumerable<CoachDTO>> GetAllCoachesAsync();
     Task<string> CreateCoachAsync(CoachModel coach, string password);
-    Task<bool> UpdateCoachAsync(CoachModel player);
+    Task<bool> UpdateCoachAsync(CoachModel coach);
     Task<bool> DeleteCoachAsync(string id);
 }

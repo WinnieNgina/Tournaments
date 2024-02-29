@@ -147,3 +147,8 @@ C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\API\bin\Debug\net8.0\zh-H
 C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\API\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
 C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\API\bin\Debug\net8.0\MailKit.dll
 C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\API\bin\Debug\net8.0\MimeKit.dll
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\API\bin\Debug\net8.0\AfricasTalkingCS.dll
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\API\bin\Debug\net8.0\PhoneNumbers.dll
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\API\bin\Debug\net8.0\System.Net.Http.Formatting.dll
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\API\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\user\OneDrive\Desktop\Tournaments\Tournaments\API\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll

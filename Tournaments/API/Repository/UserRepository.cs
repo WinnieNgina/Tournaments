@@ -137,5 +137,17 @@ namespace API.Repository
             var user = await _userManager.FindByIdAsync(userId);
             return await _userManager.AddToRoleAsync(user, roleName);
         }
+
+        public async Task<string> GeneratePhoneNumberConfirmationTokenAsync(string userId, string phoneNumber)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            return await _userManager.GenerateChangePhoneNumberTokenAsync(user, phoneNumber);
+        }
+
+        public async Task<IdentityResult> ConfirmPhoneNumberAsync(string name, string phoneNumber, string token)
+        {
+            var user = await _userManager.FindByNameAsync(name);
+            return await _userManager.ChangePhoneNumberAsync(user, phoneNumber, token);
+        }
     }
 }

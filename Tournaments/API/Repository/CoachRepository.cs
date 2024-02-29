@@ -148,8 +148,11 @@ public class CoachRepository : ICoachRepository
             AreaOfResidence = coach.AreaOfResidence,
             UserName = coach.UserName,
             Email = coach.Email,
+            PhoneNumber = coach.PhoneNumber,
             SocialMediaUrl = coach.SocialMediaUrl,
             CoachingSpecialization = coach.CoachingSpecialization,
+            Achievements = coach.Achievements,
+            YearsOfExperience = coach.YearsOfExperience,
             UserType = "Coach" // Assuming UserType is a property in your User class
         };
 
