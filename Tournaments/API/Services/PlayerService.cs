@@ -112,4 +112,9 @@ public class PlayerService : IPlayerService
     {
         return await _userRepository.ConfirmPhoneNumberAsync(name, phoneNumber, token);
     }
+
+    public async Task<PlayerModel> GetPlayerByPhoneNumberAsync(string phoneNumber)
+    {
+        return await _playerRepository.GetPlayerByPhoneNumberAsync(phoneNumber);
+    }
 }

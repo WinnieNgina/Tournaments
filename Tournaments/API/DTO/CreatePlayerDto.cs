@@ -39,6 +39,10 @@ namespace API.DTO
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
+        [Required]
+        [Display(Name = "Phone Number")]
+        [DataType(DataType.PhoneNumber)]
+        public string PhoneNumber { get; set; }
     }
 }
 

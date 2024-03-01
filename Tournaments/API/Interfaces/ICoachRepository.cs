@@ -12,4 +12,5 @@ public interface ICoachRepository
     Task<string> CreateCoachAsync(CoachModel coach, string password);
     Task<bool> UpdateCoachAsync(CoachModel coach);
     Task<bool> DeleteCoachAsync(string id);
+    Task<CoachModel> GetCoachByPhoneNumberAsync(string phoneNumber);
 }

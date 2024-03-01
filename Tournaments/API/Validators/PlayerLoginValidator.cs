@@ -1,5 +1,6 @@
 ﻿using API.DTO;
 using API.Interfaces;
+using API.Services;
 using static System.Net.WebRequestMethods;
 
 namespace API.Validators;
@@ -17,17 +18,17 @@ public class PlayerLoginValidator : ILoginValidator
     {
         var result = new ValidationResult { IsValid = true };
 
-        if (string.IsNullOrEmpty(model.Email) && string.IsNullOrEmpty(model.UserName))
+        if (string.IsNullOrEmpty(model.PhoneNumber) && string.IsNullOrEmpty(model.UserName))
         {
             result.IsValid = false;
-            result.Errors.Add("Either Email or UserName is required.");
+            result.Errors.Add("Either Phone number or UserName is required.");
             return result;  // Early return
         }
 
-        if (!string.IsNullOrEmpty(model.Email) && !string.IsNullOrEmpty(model.UserName))
+        if (!string.IsNullOrEmpty(model.PhoneNumber) && !string.IsNullOrEmpty(model.UserName))
         {
             result.IsValid = false;
-            result.Errors.Add("Provide either Email or UserName, not both.");
+            result.Errors.Add("Provide either Phone number or UserName, not both.");
             return result;  // Early return
         }
 
@@ -37,20 +38,19 @@ public class PlayerLoginValidator : ILoginValidator
             result.Errors.Add("Password is required.");
             return result;  // Early return
         }
-
-        var player = model.Email != null ? await _playerService.GetPlayerByEmailAsync(model.Email) : await _playerService.GetPlayerByUserNameAsync(model.UserName);
+        var player = model.PhoneNumber != null ? await _playerService.GetPlayerByPhoneNumberAsync(model.PhoneNumber) : await _playerService.GetPlayerByUserNameAsync(model.UserName);
 
         if (player == null)
         {
             result.IsValid = false;
-            result.Errors.Add("Invalid email or username.");
+            result.Errors.Add("Invalid Phone number or username.");
             return result;  // Early return
         }
 
-        if (!player.EmailConfirmed)
+        if (!player.PhoneNumberConfirmed)
         {
             result.IsValid = false;
-            result.Errors.Add("Please confirm your email before logging in.");
+            result.Errors.Add("Please confirm your phone number before logging in.");
             return result;  // Early return
         }
 
@@ -61,7 +61,6 @@ public class PlayerLoginValidator : ILoginValidator
             result.Errors.Add("Invalid password.");
             return result;  // Early return
         }
-
         return result;  // Return result if all checks pass
     }
 }

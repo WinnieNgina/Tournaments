@@ -12,5 +12,6 @@ namespace API.DTO
         public string AreaOfResidence { get; set; }
         public DateTime DateOfBirth { get; set; }
         public PlayerStatus Status { get; set; }
+        public string PhoneNumber { get; set; }
     }
 }

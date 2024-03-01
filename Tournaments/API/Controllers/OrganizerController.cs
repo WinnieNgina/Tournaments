@@ -66,7 +66,7 @@ public class OrganizerController : ControllerBase
             await _organizerService.AddToRoleAsync(Id, role);
             string code = await _organizerService.GeneratePhoneNumberConfirmationTokenAsync(Id, model.PhoneNumber);
             var message = $"Your confirmation code is: {code}";
-            _smsService.SendSms(organizer.PhoneNumber, message);
+            _smsService.SendSms(model.PhoneNumber, message);
             var confirmationResult = await SendEmailConfirmationAsync(Id, organizer.Email);
 
             if (confirmationResult.Succeeded)
@@ -202,7 +202,7 @@ public class OrganizerController : ControllerBase
         {
             return BadRequest(validationResult.Errors);
         }
-        var organizer = model.Email != null ? await _organizerService.GetOrganizerByEmailAsync(model.Email) : await _organizerService.GetOrganizerByNameAsync(model.UserName);
+        var organizer = model.PhoneNumber != null ? await _organizerService.GetOrganizerByPhoneNumberAsync(model.PhoneNumber) : await _organizerService.GetOrganizerByNameAsync(model.UserName);
 
         // At this point, we know the player exists and their email is confirmed,
         // and the password has been validated. Proceed with the login process.
@@ -216,7 +216,7 @@ public class OrganizerController : ControllerBase
             _smsService.SendSms(organizer.PhoneNumber, message);
 
             // Optionally, you may return a message to inform the user
-            return Ok("Please check your email for the OTP code.");
+            return Ok("Please check your messages for the OTP code.");
         }
 
         // Two-factor authentication is not enabled, generate and return the authentication token

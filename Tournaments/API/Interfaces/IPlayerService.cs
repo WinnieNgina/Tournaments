@@ -27,4 +27,5 @@ public interface IPlayerService
     Task<IdentityResult> AddToRoleAsync(string playerId, string roleName);
     Task<string> GeneratePhoneNumberConfirmationTokenAsync(string Id, string phoneNumber);
     Task<IdentityResult> ConfirmPhoneNumberAsync(string name, string phoneNumber, string token);
+    Task<PlayerModel> GetPlayerByPhoneNumberAsync(string phoneNumber);
 }

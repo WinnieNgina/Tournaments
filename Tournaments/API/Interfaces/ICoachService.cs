@@ -27,4 +27,5 @@ public interface ICoachService
     Task SignInAsync(string Id, bool isPersistent);
     Task<string> GeneratePhoneNumberConfirmationTokenAsync(string Id, string phoneNumber);
     Task<IdentityResult> ConfirmPhoneNumberAsync(string name, string phoneNumber, string token);
+    Task<CoachModel> GetCoachByPhoneNumberAsync(string phoneNumber);
 }

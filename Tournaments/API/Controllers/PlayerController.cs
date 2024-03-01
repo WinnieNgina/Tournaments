@@ -1,5 +1,6 @@
 ﻿using API.DTO;
 using API.Interfaces;
+using API.Services;
 using API.Validators;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -52,6 +53,7 @@ public class PlayerController : ControllerBase
             AreaOfResidence = model.AreaOfResidence,
             UserName = model.UserName,
             Email = model.Email,
+            PhoneNumber = model.PhoneNumber,
             Status = model.Status
         };
         string password = model.Password;
@@ -61,26 +63,41 @@ public class PlayerController : ControllerBase
             var role = "Player";
             await _playerService.AddToRoleAsync(playerId, role);
             // Generate email confirmation token
+            string code = await _playerService.GeneratePhoneNumberConfirmationTokenAsync(playerId, model.PhoneNumber);
+            var message = $"Your confirmation code is: {code}";
+            _smsService.SendSms(model.PhoneNumber, message);
             var token = await _playerService.GenerateEmailConfirmationTokenAsync(playerId);
-            var callbackUrl = Url.Action("ConfirmEmail", "Player", new
-            {
-                playerId = Uri.EscapeDataString(playerId),
-                token = token // Do not use Uri.EscapeDataString for token here
-            }, "https", Request.Host.Value);
-            // Send confirmation email
-            var subject = "Confirm your email";
+            var confirmationResult = await SendEmailConfirmationAsync(playerId, model.Email);
 
-            var message = $@"Please confirm your email by clicking the following link:
+            if (confirmationResult.Succeeded)
+            {
+                return Ok("User created successfully");
+            }
+            else
+            {
+                return BadRequest($"Failed to send confirmation email: {string.Join(", ", confirmationResult.Errors)}");
+            }
+        }
+        return BadRequest(new { Message = "Failed to create user" });
+    }
+    private async Task<IdentityResult> SendEmailConfirmationAsync(string Id, string email)
+    {
+        var token = await _playerService.GenerateEmailConfirmationTokenAsync(Id);
+        var callbackUrl = Url.Action("ConfirmEmail", "Player", new
+        {
+            playerId = Uri.EscapeDataString(Id),
+            token = token // Do not use Uri.EscapeDataString for token here
+        }, "https", Request.Host.Value);
+        // Send confirmation email
+        var subject = "Confirm your email";
+
+        var message = $@"Please confirm your email by clicking the following link:
                 {callbackUrl}
 
                 If you're unable to click the link, please copy and paste it into your web browser.";
+        var isHtml = false;
 
-
-            await _emailService.SendEmailAsync(player.Email, subject, message);
-
-            return Ok("User created successfully");
-        }
-        return BadRequest(new { Message = "Failed to create user" });
+        return await _emailService.SendEmailAsync(email, subject, message, isHtml);
     }
     [HttpPost("ConfirmEmail")]
     public async Task<IActionResult> ConfirmEmail(string playerId, string token)
@@ -102,6 +119,26 @@ public class PlayerController : ControllerBase
         else
         {
             // Email confirmation failed
+            // Include specific error messages in the response
+            var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
+            return BadRequest($"Failed to confirm email: {errorMessages}");
+        }
+    }
+    [HttpPost("VerifyPhoneNumber")]
+    public async Task<IActionResult> VerifyPhoneNumber(string name, string phoneNumber, string token)
+    {
+        if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(phoneNumber))
+        {
+            return BadRequest("User name, phone number and confirmation code are required.");
+        }
+        var result = await _playerService.ConfirmPhoneNumberAsync(name, phoneNumber, token);
+        if (result.Succeeded)
+        {
+            return Ok("Phone number confirmed successfully");
+        }
+        else
+        {
+            // Phone number confirmation failed
             // Include specific error messages in the response
             var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
             return BadRequest($"Failed to confirm email: {errorMessages}");
@@ -140,6 +177,17 @@ public class PlayerController : ControllerBase
         // Return a DTO or a model with the user's information
         return Ok(new { user.Id, user.UserName, user.Email });
     }
+    [HttpGet("{phoneNumber}/GetOrganizerByPhoneNumber")]
+    public async Task<IActionResult> GetOrganizerByPhoneNumber(string phoneNumber)
+    {
+        var user = await _playerService.GetPlayerByPhoneNumberAsync(phoneNumber);
+        if (user == null)
+        {
+            return NotFound(); // User not found
+        }
+        // Return a DTO or a model with the user's information
+        return Ok(new { user.Id, user.UserName, user.Email });
+    }
     [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] LoginDTO model)
     {
@@ -157,7 +205,7 @@ public class PlayerController : ControllerBase
 
         // Assuming _playerService.GetPlayerByEmailAsync and _playerService.GetPlayerByUserNameAsync
         // return the same type of player object, we can simplify the retrieval process.
-        var player = model.Email != null ? await _playerService.GetPlayerByEmailAsync(model.Email) : await _playerService.GetPlayerByUserNameAsync(model.UserName);
+        var player = model.PhoneNumber != null ? await _playerService.GetPlayerByPhoneNumberAsync(model.PhoneNumber) : await _playerService.GetPlayerByUserNameAsync(model.UserName);
 
         // At this point, we know the player exists and their email is confirmed,
         // and the password has been validated. Proceed with the login process.
@@ -166,13 +214,11 @@ public class PlayerController : ControllerBase
         {
             // Two-factor authentication is enabled
             var otpToken = await _playerService.GenerateTwoFactorTokenAsync(player.Id);
-            var emailSubject = "Your Login OTP Code";
-            var emailMessage = $"Your OTP code is: {otpToken}";
-
-            await _emailService.SendEmailAsync(player.Email, emailSubject, emailMessage);
+            var message = $"Your Tournament tracker verification code is: {otpToken}";
+            _smsService.SendSms(player.PhoneNumber, message);
 
             // Optionally, you may return a message to inform the user
-            return Ok("Please check your email for the OTP code.");
+            return Ok("Please check your messages for the OTP code.");
         }
 
         // Two-factor authentication is not enabled, generate and return the authentication token
@@ -213,7 +259,7 @@ public class PlayerController : ControllerBase
         var player = await _playerService.GetPlayerByEmailAsync(email);
         if (player == null)
         {
-            return NotFound(); // Player not found
+            return NotFound("Player not found."); // Player not found
         }
         var success = await _playerService.DeletePlayerAsync(player.Id);
         if (success)
@@ -221,7 +267,7 @@ public class PlayerController : ControllerBase
             await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
             return Ok("Account deleted successfully");
         }
-        return NotFound("Player not found or failed to delete player");
+        return NotFound("Failed to delete player account");
     }
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()

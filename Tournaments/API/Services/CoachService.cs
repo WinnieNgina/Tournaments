@@ -114,5 +114,10 @@ namespace API.Services
         {
             return await _userRepository.ConfirmPhoneNumberAsync(name, phoneNumber, token);
         }
+
+        public async Task<CoachModel> GetCoachByPhoneNumberAsync(string phoneNumber)
+        {
+            return await _coachRepository.GetCoachByPhoneNumberAsync(phoneNumber);
+        }
     }
 }

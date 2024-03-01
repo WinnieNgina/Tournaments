@@ -160,26 +160,26 @@ public class CoachController : ControllerBase
         {
             return BadRequest(validationResult.Errors);
         }
-        var player = model.Email != null ? await _coachService.GetCoachByEmailAsync(model.Email) : await _coachService.GetCoachByNameAsync(model.UserName);
+        var coach = model.PhoneNumber != null ? await _coachService.GetCoachByPhoneNumberAsync(model.PhoneNumber) : await _coachService.GetCoachByNameAsync(model.UserName);
 
         // At this point, we know the player exists and their email is confirmed,
         // and the password has been validated. Proceed with the login process.
 
-        if (player.TwoFactorEnabled)
+        if (coach.TwoFactorEnabled)
         {
             // Two-factor authentication is enabled
-            var otpToken = await _coachService.GenerateTwoFactorTokenAsync(player.Id);
+            var otpToken = await _coachService.GenerateTwoFactorTokenAsync(coach.Id);
             var emailSubject = "Your Login OTP Code";
             var emailMessage = $"Your OTP code is: {otpToken}";
 
-            await _emailService.SendEmailAsync(player.Email, emailSubject, emailMessage);
+            await _emailService.SendEmailAsync(coach.Email, emailSubject, emailMessage);
 
             // Optionally, you may return a message to inform the user
             return Ok("Please check your email for the OTP code.");
         }
 
         // Two-factor authentication is not enabled, generate and return the authentication token
-        var token = await _coachService.GenerateAuthTokenAsync(player.Id);
+        var token = await _coachService.GenerateAuthTokenAsync(coach.Id);
         return Ok(new { Token = token });
     }
     [HttpPost("{email}/Enable2FA")]

@@ -209,4 +209,29 @@ public class CoachRepository : ICoachRepository
         }
         return false; // User does not exist or is not of UserType "Coach"
     }
+    public async Task<CoachModel> GetCoachByPhoneNumberAsync(string phoneNumber)
+    {
+        // Define a cache key based on the coach phone number
+        var cacheKey = $"CoachModel:{phoneNumber}";
+
+        // Try to get the coach from the cache
+        if (!_cache.TryGetValue(cacheKey, out CoachModel coach))
+        {
+            // If the organizer is not in the cache, fetch it from the database
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
+            if (user != null && user.UserType == "Coach")
+            {
+                coach = (CoachModel)user;
+
+                // Define cache options
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5)) // Cache expiration
+                    .SetPriority(CacheItemPriority.Normal);
+
+                // Save the organizer in the cache
+                _cache.Set(cacheKey, coach, cacheEntryOptions);
+            }
+        }
+        return coach;
+    }
 }

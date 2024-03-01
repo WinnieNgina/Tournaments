@@ -94,6 +94,7 @@ public class PlayerRepository : IPlayerRepository
                                             LastName = p.LastName,
                                             AreaOfResidence = p.AreaOfResidence,
                                             DateOfBirth = p.DateOfBirth,
+                                            PhoneNumber = p.PhoneNumber,
                                             Status = p.Status,
                                         })
                                         .AsNoTracking()
@@ -123,6 +124,7 @@ public class PlayerRepository : IPlayerRepository
             LastName = player.LastName,
             AreaOfResidence = player.AreaOfResidence,
             DateOfBirth = player.DateOfBirth,
+            PhoneNumber = player.PhoneNumber,
             Status = player.Status,
             UserType = "Player" // Assuming UserType is a property in your User class
         };
@@ -206,6 +208,31 @@ public class PlayerRepository : IPlayerRepository
                     .SetPriority(CacheItemPriority.Normal);
 
                 // Save the player in the cache
+                _cache.Set(cacheKey, player, cacheEntryOptions);
+            }
+        }
+        return player;
+    }
+    public async Task<PlayerModel> GetPlayerByPhoneNumberAsync(string phoneNumber)
+    {
+        // Define a cache key based on the organizer phone number
+        var cacheKey = $"PlayerModel:{phoneNumber}";
+
+        // Try to get the organizer from the cache
+        if (!_cache.TryGetValue(cacheKey, out PlayerModel player))
+        {
+            // If the organizer is not in the cache, fetch it from the database
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
+            if (user != null && user.UserType == "Player")
+            {
+                player = (PlayerModel)user;
+
+                // Define cache options
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(5)) // Cache expiration
+                    .SetPriority(CacheItemPriority.Normal);
+
+                // Save the organizer in the cache
                 _cache.Set(cacheKey, player, cacheEntryOptions);
             }
         }

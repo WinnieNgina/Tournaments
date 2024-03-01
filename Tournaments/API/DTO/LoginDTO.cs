@@ -4,9 +4,9 @@ namespace API.DTO
 {
     public class LoginDTO
     {
-        [EmailAddress]
-        [Display(Name = "Email Address")]
-        public string? Email { get; set; } = null;
+        [Display(Name = "Phone Number")]
+        [DataType(DataType.PhoneNumber)]
+        public string PhoneNumber { get; set; }
 
         [Display(Name = "User Name")]
         public string? UserName { get; set; } = null;
@@ -22,7 +22,7 @@ namespace API.DTO
         {
             get
             {
-                return Email ?? UserName;
+                return PhoneNumber ?? UserName;
             }
         }
     }
