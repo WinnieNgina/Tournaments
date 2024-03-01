@@ -102,4 +102,14 @@ public class PlayerService : IPlayerService
     {
         return await _userRepository.AddToRoleAsync(playerId, roleName);
     }
+
+    public async Task<string> GeneratePhoneNumberConfirmationTokenAsync(string Id, string phoneNumber)
+    {
+        return await _userRepository.GeneratePhoneNumberConfirmationTokenAsync(Id, phoneNumber);
+    }
+
+    public async Task<IdentityResult> ConfirmPhoneNumberAsync(string name, string phoneNumber, string token)
+    {
+        return await _userRepository.ConfirmPhoneNumberAsync(name, phoneNumber, token);
+    }
 }

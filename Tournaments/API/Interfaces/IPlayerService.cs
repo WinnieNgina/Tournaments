@@ -25,4 +25,6 @@ public interface IPlayerService
     Task SignInAsync(string playerId, bool isPersistent);
     Task<bool> IsPasswordValidAsync(string password);
     Task<IdentityResult> AddToRoleAsync(string playerId, string roleName);
+    Task<string> GeneratePhoneNumberConfirmationTokenAsync(string Id, string phoneNumber);
+    Task<IdentityResult> ConfirmPhoneNumberAsync(string name, string phoneNumber, string token);
 }

@@ -16,12 +16,14 @@ public class PlayerController : ControllerBase
     private readonly IEmailService _emailService;
     private readonly IRegistrationValidator _registrationValidator;
     private readonly ILoginValidatorFactory _loginValidatorFactory;
-    public PlayerController(IPlayerService playerService, IEmailService emailService, IRegistrationValidator registrationValidator, ILoginValidatorFactory loginValidatorFactory)
+    private readonly ISmsService _smsService;
+    public PlayerController(IPlayerService playerService, IEmailService emailService, IRegistrationValidator registrationValidator, ILoginValidatorFactory loginValidatorFactory, ISmsService smsService)
     {
         _playerService = playerService;
         _emailService = emailService;
         _registrationValidator = registrationValidator;
         _loginValidatorFactory = loginValidatorFactory;
+        _smsService = smsService;
     }
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PlayerDTO>>> GetAllPlayers()

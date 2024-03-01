@@ -25,4 +25,6 @@ public interface ICoachService
     Task<bool> CheckCurrentPasswordAsync(string Id, string currentPassword);
     Task<IdentityResult> ChangePasswordAsync(string Id, string currentPassword, string newPassword);
     Task SignInAsync(string Id, bool isPersistent);
+    Task<string> GeneratePhoneNumberConfirmationTokenAsync(string Id, string phoneNumber);
+    Task<IdentityResult> ConfirmPhoneNumberAsync(string name, string phoneNumber, string token);
 }

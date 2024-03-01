@@ -18,16 +18,13 @@ public class OrganizerController : ControllerBase
     private readonly IOrganizerService _organizerService;
     private readonly IEmailService _emailService;
     private readonly IOrganizerRegistrationValidator _organizerRegistrationValidator;
-    private readonly IEmailService emailService;
     private readonly ISmsService _smsService;
     private readonly ILoginValidatorFactory _loginValidatorFactory;
-    public OrganizerController(IOrganizerService organizerService, IEmailService emailservice, IOrganizerRegistrationValidator organizerRegistrationValidator,
-        IEmailService emailServive, ISmsService smsService, ILoginValidatorFactory loginValidatorFactory)
+    public OrganizerController(IOrganizerService organizerService, IEmailService emailservice, IOrganizerRegistrationValidator organizerRegistrationValidator, ISmsService smsService, ILoginValidatorFactory loginValidatorFactory)
     {
         _organizerService = organizerService;
         _emailService = emailservice;
         _organizerRegistrationValidator = organizerRegistrationValidator;
-        _emailService = emailServive;
         _smsService = smsService;
         _loginValidatorFactory = loginValidatorFactory;
     }
@@ -65,6 +62,8 @@ public class OrganizerController : ControllerBase
         var Id = await _organizerService.CreateOrganizerAsync(organizer, password);
         if (Id != null)
         {
+            var role = "Organizer";
+            await _organizerService.AddToRoleAsync(Id, role);
             string code = await _organizerService.GeneratePhoneNumberConfirmationTokenAsync(Id, model.PhoneNumber);
             var message = $"Your confirmation code is: {code}";
             _smsService.SendSms(organizer.PhoneNumber, message);
