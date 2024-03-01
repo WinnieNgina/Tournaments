@@ -66,7 +66,6 @@ public class PlayerController : ControllerBase
             string code = await _playerService.GeneratePhoneNumberConfirmationTokenAsync(playerId, model.PhoneNumber);
             var message = $"Your confirmation code is: {code}";
             _smsService.SendSms(model.PhoneNumber, message);
-            var token = await _playerService.GenerateEmailConfirmationTokenAsync(playerId);
             var confirmationResult = await SendEmailConfirmationAsync(playerId, model.Email);
 
             if (confirmationResult.Succeeded)

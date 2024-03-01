@@ -6,7 +6,7 @@ namespace API.DTO
     {
         [Display(Name = "Phone Number")]
         [DataType(DataType.PhoneNumber)]
-        public string PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = null;
 
         [Display(Name = "User Name")]
         public string? UserName { get; set; } = null;
