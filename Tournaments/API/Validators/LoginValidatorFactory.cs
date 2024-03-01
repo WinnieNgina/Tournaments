@@ -19,6 +19,8 @@ public class LoginValidatorFactory : ILoginValidatorFactory
                 return _serviceProvider.GetRequiredService<CoachLoginValidator>();
             case "Player":
                 return _serviceProvider.GetRequiredService<PlayerLoginValidator>();
+            case "Organizer":
+                return _serviceProvider.GetRequiredService<OrganizerLoginValidator>();
             default:
                 throw new ArgumentException("Invalid role", nameof(role));
         }

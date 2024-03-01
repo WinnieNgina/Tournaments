@@ -32,6 +32,7 @@ builder.Services.AddScoped<ICoachRegistrationValidator, CoachRegistrationValidat
 builder.Services.AddScoped<IOrganizerRegistrationValidator, OrganizerRegistrationValidator>();
 builder.Services.AddScoped<PlayerLoginValidator>();
 builder.Services.AddScoped<CoachLoginValidator>();
+builder.Services.AddScoped<OrganizerLoginValidator>();
 builder.Services.AddScoped<ILoginValidatorFactory, LoginValidatorFactory>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
