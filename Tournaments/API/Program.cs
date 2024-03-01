@@ -88,7 +88,7 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     options.User.RequireUniqueEmail = true;
 
     // Sign-in requirements
-    options.SignIn.RequireConfirmedEmail = true;
+    options.SignIn.RequireConfirmedEmail = false;
     options.SignIn.RequireConfirmedPhoneNumber = true; // Enable phone number confirmation
     options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultEmailProvider;
 })
