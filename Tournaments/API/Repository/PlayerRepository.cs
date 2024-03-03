@@ -112,40 +112,38 @@ public class PlayerRepository : IPlayerRepository
 
         return playerDTOs;
     }
-
-    public async Task<string> CreatePlayerAsync(PlayerModel player, string password)
+    public async Task<string> CreatePlayerAsync(CreatePlayerDto model, string password)
     {
-        // Ensure the player object is correctly set up before creating the user
-        var user = new PlayerModel
+        // Convert CreatePlayerDto to PlayerModel
+        var player = new PlayerModel
         {
-            UserName = player.UserName,
-            Email = player.Email,
-            FirstName = player.FirstName,
-            LastName = player.LastName,
-            AreaOfResidence = player.AreaOfResidence,
-            DateOfBirth = player.DateOfBirth,
-            PhoneNumber = player.PhoneNumber,
-            Status = player.Status,
+            UserName = model.UserName,
+            Email = model.Email,
+            FirstName = model.FirstName,
+            LastName = model.LastName,
+            AreaOfResidence = model.AreaOfResidence,
+            DateOfBirth = model.DateOfBirth,
+            PhoneNumber = model.PhoneNumber,
+            Status = model.Status,
             UserType = "Player" // Assuming UserType is a property in your User class
         };
 
         // Use UserManager to create the user
-        var result = await _userManager.CreateAsync(user, password);
+        var result = await _userManager.CreateAsync(player, password);
 
         // Check if the user was created successfully
         if (result.Succeeded)
         {
-
             // Remove the cached list of all players
             _cache.Remove("AllPlayerModels");
 
             // Add the newly created player to the cache   
             // useful for reducing database calls
-            var cacheKey = $"PlayerModel:{user.Id}";
-            _cache.Set(cacheKey, user, TimeSpan.FromMinutes(5));
+            var cacheKey = $"PlayerModel:{player.Id}";
+            _cache.Set(cacheKey, player, TimeSpan.FromMinutes(5));
 
             // Return the user's Id
-            return user.Id;
+            return player.Id;
         }
         else
         {
@@ -153,8 +151,6 @@ public class PlayerRepository : IPlayerRepository
             return null;
         }
     }
-
-
     public async Task<bool> UpdatePlayerAsync(PlayerModel player)
     {
         // Check if the coach exists and is of UserType "Player"

@@ -21,35 +21,34 @@ namespace API.Repository
             _context = context;
             _cache = cache;
         }
-        public async Task<string> CreateOrganizerAsync(TournamentOrganizerModel organizer, string password)
+        public async Task<string> CreateOrganizerAsync(SignUpOrganizerDTO model, string password)
         {
-            // Convert CoachModel to User or ApplicationIdentityUser based on your setup
-            var user = new TournamentOrganizerModel
+            // Convert SignUpOrganizerDTO to TournamentOrganizerModel
+            var organizer = new TournamentOrganizerModel
             {
-                PhoneNumber = organizer.PhoneNumber,
-                FirstName = organizer.FirstName,
-                LastName = organizer.LastName,
-                AreaOfResidence = organizer.AreaOfResidence,
-                UserName = organizer.UserName,
-                Email = organizer.Email,
-                OrganizationName = organizer.OrganizationName,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                AreaOfResidence = model.AreaOfResidence,
+                UserName = model.UserName,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                OrganizationName = model.OrganizationName,
                 UserType = "TournamentOrganizer" // Assuming UserType is a property in your User class
             };
 
             // Use UserManager to create the user
-            var result = await _userManager.CreateAsync(user, password);
+            var result = await _userManager.CreateAsync(organizer, password);
 
             // Check if the user was created successfully
             if (result.Succeeded)
             {
-                // Remove the cached list of all players
+                // Remove the cached list of all organizers
                 _cache.Remove("AllOrganizers");
 
-                // Optionally, you can also add the newly created coach to the cache if needed
-                // This is not necessary for invalidating the cache but can be useful for reducing database calls
-                var cacheKey = $"Organizer:{user.Id}";
+                // Optionally, you can also add the newly created organizer to the cache if needed
+                var cacheKey = $"Organizer:{organizer.Id}";
                 _cache.Set(cacheKey, organizer, TimeSpan.FromMinutes(5));
-                return user.Id;
+                return organizer.Id;
             }
             else
             {

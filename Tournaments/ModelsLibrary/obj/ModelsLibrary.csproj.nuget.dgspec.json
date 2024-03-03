@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\user\\OneDrive\\Desktop\\Tournaments\\Tournaments\\ModelsLibrary\\ModelsLibrary.csproj": {}
+    "C:\\Users\\user\\OneDrive\\Desktop\\Presentation Demo\\Tournaments\\Tournaments\\ModelsLibrary\\ModelsLibrary.csproj": {}
   },
   "projects": {
-    "C:\\Users\\user\\OneDrive\\Desktop\\Tournaments\\Tournaments\\ModelsLibrary\\ModelsLibrary.csproj": {
+    "C:\\Users\\user\\OneDrive\\Desktop\\Presentation Demo\\Tournaments\\Tournaments\\ModelsLibrary\\ModelsLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\user\\OneDrive\\Desktop\\Tournaments\\Tournaments\\ModelsLibrary\\ModelsLibrary.csproj",
+        "projectUniqueName": "C:\\Users\\user\\OneDrive\\Desktop\\Presentation Demo\\Tournaments\\Tournaments\\ModelsLibrary\\ModelsLibrary.csproj",
         "projectName": "ModelsLibrary",
-        "projectPath": "C:\\Users\\user\\OneDrive\\Desktop\\Tournaments\\Tournaments\\ModelsLibrary\\ModelsLibrary.csproj",
+        "projectPath": "C:\\Users\\user\\OneDrive\\Desktop\\Presentation Demo\\Tournaments\\Tournaments\\ModelsLibrary\\ModelsLibrary.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\user\\OneDrive\\Desktop\\Tournaments\\Tournaments\\ModelsLibrary\\obj\\",
+        "outputPath": "C:\\Users\\user\\OneDrive\\Desktop\\Presentation Demo\\Tournaments\\Tournaments\\ModelsLibrary\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

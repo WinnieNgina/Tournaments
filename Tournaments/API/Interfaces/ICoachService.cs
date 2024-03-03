@@ -7,7 +7,7 @@ namespace API.Interfaces;
 public interface ICoachService
 {
     Task<IEnumerable<CoachDTO>> GetAllCoachesAsync();
-    Task<string> CreateCoachAsync(CoachModel coach, string password);
+    Task<string> CreateCoachAsync(SignUpCoachDTO model, string password);
     Task<CoachModel> GetCoachByIdAsync(string id);
     Task<CoachModel> GetCoachByEmailAsync(string email);
     Task<CoachModel> GetCoachByNameAsync(string userName);

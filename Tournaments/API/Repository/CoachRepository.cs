@@ -138,26 +138,26 @@ public class CoachRepository : ICoachRepository
 
         return coachDTOs;
     }
-    public async Task<string> CreateCoachAsync(CoachModel coach, string password)
+    public async Task<string> CreateCoachAsync(SignUpCoachDTO model, string password)
     {
-        // Convert CoachModel to User or ApplicationIdentityUser based on your setup
-        var user = new CoachModel
+        // Convert SignUpCoachDTO to CoachModel
+        var coach = new CoachModel
         {
-            FirstName = coach.FirstName,
-            LastName = coach.LastName,
-            AreaOfResidence = coach.AreaOfResidence,
-            UserName = coach.UserName,
-            Email = coach.Email,
-            PhoneNumber = coach.PhoneNumber,
-            SocialMediaUrl = coach.SocialMediaUrl,
-            CoachingSpecialization = coach.CoachingSpecialization,
-            Achievements = coach.Achievements,
-            YearsOfExperience = coach.YearsOfExperience,
+            FirstName = model.FirstName,
+            LastName = model.LastName,
+            AreaOfResidence = model.AreaOfResidence,
+            UserName = model.UserName,
+            Email = model.Email,
+            PhoneNumber = model.PhoneNumber,
+            SocialMediaUrl = model.SocialMediaUrl,
+            CoachingSpecialization = model.CoachingSpecialization,
+            Achievements = model.Achievements,
+            YearsOfExperience = model.YearsOfExperience,
             UserType = "Coach" // Assuming UserType is a property in your User class
         };
 
         // Use UserManager to create the user
-        var result = await _userManager.CreateAsync(user, password);
+        var result = await _userManager.CreateAsync(coach, password);
 
         // Check if the user was created successfully
         if (result.Succeeded)
@@ -166,10 +166,9 @@ public class CoachRepository : ICoachRepository
             _cache.Remove("AllCoachModels");
 
             // Optionally, you can also add the newly created coach to the cache if needed
-            // This is not necessary for invalidating the cache but can be useful for reducing database calls
-            var cacheKey = $"CoachModel:{user.Id}";
+            var cacheKey = $"CoachModel:{coach.Id}";
             _cache.Set(cacheKey, coach, TimeSpan.FromMinutes(5));
-            return user.Id;
+            return coach.Id;
         }
         else
         {

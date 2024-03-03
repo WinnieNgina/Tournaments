@@ -46,20 +46,8 @@ public class OrganizerController : ControllerBase
         {
             return BadRequest(validationResult.Errors);
         }
-        // Convert PlayerModelDto to PlayerModel
-        var organizer = new TournamentOrganizerModel
-        {
-
-            FirstName = model.FirstName,
-            LastName = model.LastName,
-            AreaOfResidence = model.AreaOfResidence,
-            UserName = model.UserName,
-            Email = model.Email,
-            PhoneNumber = model.PhoneNumber,
-            OrganizationName = model.OrganizationName,
-        };
         string password = model.Password;
-        var Id = await _organizerService.CreateOrganizerAsync(organizer, password);
+        var Id = await _organizerService.CreateOrganizerAsync(model, password);
         if (Id != null)
         {
             var role = "Organizer";
@@ -67,7 +55,7 @@ public class OrganizerController : ControllerBase
             string code = await _organizerService.GeneratePhoneNumberConfirmationTokenAsync(Id, model.PhoneNumber);
             var message = $"Your confirmation code is: {code}";
             _smsService.SendSms(model.PhoneNumber, message);
-            var confirmationResult = await SendEmailConfirmationAsync(Id, organizer.Email);
+            var confirmationResult = await SendEmailConfirmationAsync(Id, model.Email);
 
             if (confirmationResult.Succeeded)
             {

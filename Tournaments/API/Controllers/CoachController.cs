@@ -1,12 +1,10 @@
 ﻿using API.DTO;
 using API.Interfaces;
-using API.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using ModelsLibrary.Models;
 using System.Data;
-using System.Numerics;
+
 
 namespace API.Controllers;
 
@@ -46,24 +44,8 @@ public class CoachController : ControllerBase
         {
             return BadRequest(validationResult.Errors);
         }
-        // Convert PlayerModelDto to PlayerModel
-        var coach = new CoachModel
-        {
-           
-            FirstName = model.FirstName,
-            LastName = model.LastName,
-            AreaOfResidence = model.AreaOfResidence,
-            UserName = model.UserName,
-            Email = model.Email,
-            PhoneNumber = model.PhoneNumber,
-            SocialMediaUrl = model.SocialMediaUrl,
-            CoachingSpecialization = model.CoachingSpecialization,
-            Achievements = model.Achievements,
-            YearsOfExperience = model.YearsOfExperience,
-
-        };
         string password = model.Password;
-        var Id = await _coachService.CreateCoachAsync(coach, password);
+        var Id = await _coachService.CreateCoachAsync(model, password);
         if (Id != null)
         {
             var role = "Coach";
@@ -85,6 +67,7 @@ public class CoachController : ControllerBase
         }
         return BadRequest(new { Message = "Failed to create user" });
     }
+
     private async Task<IdentityResult> SendEmailConfirmationAsync(string Id, string email)
     {
         var token = await _coachService.GenerateEmailConfirmationTokenAsync(Id);

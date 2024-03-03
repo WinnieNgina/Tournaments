@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "qSzlMfVa2h2pQHcG6jXUAwxmaRd+Yj0kczE1XYqbWGRJUJQsnIe52v7FHW5qXa1KK1zlfmFu2/extUk3ORd+VA==",
+  "dgSpecHash": "ufY+D7FEO3F9B4/voNkRsni/sbJBgC+vMRyJUTZEd4pMQivNsE40J5LGbkXHk2VXWaMmmPNBZdbhBsoMuZS7iw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\user\\OneDrive\\Desktop\\Tournaments\\Tournaments\\ModelsLibrary\\ModelsLibrary.csproj",
+  "projectFilePath": "C:\\Users\\user\\OneDrive\\Desktop\\Presentation Demo\\Tournaments\\Tournaments\\ModelsLibrary\\ModelsLibrary.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\user\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\user\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",

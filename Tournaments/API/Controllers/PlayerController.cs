@@ -44,20 +44,8 @@ public class PlayerController : ControllerBase
         {
             return BadRequest(validationResult.Errors);
         }
-        // Convert PlayerModelDto to PlayerModel
-        var player = new PlayerModel
-        {
-            DateOfBirth = model.DateOfBirth,
-            FirstName = model.FirstName,
-            LastName = model.LastName,
-            AreaOfResidence = model.AreaOfResidence,
-            UserName = model.UserName,
-            Email = model.Email,
-            PhoneNumber = model.PhoneNumber,
-            Status = model.Status
-        };
         string password = model.Password;
-        var playerId = await _playerService.CreatePlayerAsync(player, password);
+        var playerId = await _playerService.CreatePlayerAsync(model, password);
         if (playerId != null)
         {
             var role = "Player";

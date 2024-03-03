@@ -46,9 +46,9 @@ namespace API.Services
             return await _userRepository.ConfirmPhoneNumberAsync(name, phoneNumber, token);
         }
 
-        public async Task<string> CreateOrganizerAsync(TournamentOrganizerModel orgnazier, string password)
+        public async Task<string> CreateOrganizerAsync(SignUpOrganizerDTO model, string password)
         {
-            return await _organizerRepository.CreateOrganizerAsync(orgnazier, password);
+            return await _organizerRepository.CreateOrganizerAsync(model, password);
         }
 
         public async Task<bool> DeleteOrganizerAsync(string id)

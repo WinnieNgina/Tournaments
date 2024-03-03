@@ -8,7 +8,7 @@ public interface IPlayerRepository
     Task<PlayerModel> GetPlayerByIdAsync(string id);
     Task<PlayerModel> GetPlayerByEmailAsync(string email);
     Task<IEnumerable<PlayerDTO>> GetAllPlayersAsync();
-    Task<string> CreatePlayerAsync(PlayerModel player, string password);
+    Task<string> CreatePlayerAsync(CreatePlayerDto model, string password);
     Task<bool> UpdatePlayerAsync(PlayerModel player);
     Task<bool> DeletePlayerAsync(string id);
     Task<PlayerModel> GetPlayerByUserNameAsync(string userName);

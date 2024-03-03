@@ -31,9 +31,9 @@ public class PlayerService : IPlayerService
         return await _playerRepository.GetAllPlayersAsync();
     }
 
-    public async Task<string> CreatePlayerAsync(PlayerModel player, string password)
+    public async Task<string> CreatePlayerAsync(CreatePlayerDto model, string password)
     {
-        return await _playerRepository.CreatePlayerAsync(player, password);
+        return await _playerRepository.CreatePlayerAsync(model, password);
     }
 
     public async Task<bool> UpdatePlayerAsync(PlayerModel player)

@@ -18,9 +18,9 @@ namespace API.Services
         {
             return await _coachRepository.GetAllCoachesAsync();
         }
-        public async Task<string> CreateCoachAsync(CoachModel coach, string password)
+        public async Task<string> CreateCoachAsync(SignUpCoachDTO model, string password)
         {
-            return await _coachRepository.CreateCoachAsync(coach, password);
+            return await _coachRepository.CreateCoachAsync(model, password);
         }
 
         public async Task<CoachModel> GetCoachByIdAsync(string id)

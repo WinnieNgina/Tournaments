@@ -10,7 +10,7 @@ namespace API.Interfaces
         Task<TournamentOrganizerModel> GetOrganizerByEmailAsync(string email);
         Task<TournamentOrganizerModel> GetOrganizerByNameAsync(string userName);
         Task<IEnumerable<OrganizerDTO>> GetAllOrganizersAsync();
-        Task<string> CreateOrganizerAsync(TournamentOrganizerModel orgnazier, string password);
+        Task<string> CreateOrganizerAsync(SignUpOrganizerDTO model, string password);
         Task<bool> UpdateOrganizerAsync(TournamentOrganizerModel organizer);
         Task<bool> DeleteOrganizerAsync(string id);
         Task<bool> IsPasswordValidAsync(string password);
