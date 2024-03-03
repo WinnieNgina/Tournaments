@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using ModelsLibrary.DataAccess;
 using ModelsLibrary.Models;
-
+namespace API.Repository;
 public class PlayerRepository : IPlayerRepository
 {
     private readonly UserManager<User> _userManager;
@@ -22,7 +22,6 @@ public class PlayerRepository : IPlayerRepository
         _cache = cache;
         _configuration = configuration;
     }
-
     public async Task<PlayerModel> GetPlayerByIdAsync(string id)
     {
         // Define a cache key based on the player ID
@@ -169,8 +168,6 @@ public class PlayerRepository : IPlayerRepository
 
         return false; // Coach does not exist or is not of UserType "Player"
     }
-
-
     public async Task<bool> DeletePlayerAsync(string id)
     {
         var user = await _userManager.FindByIdAsync(id);

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ModelsLibrary.Models;
@@ -54,10 +55,19 @@ public class TournamentModel
     // Collection of match-ups associated with the tournament
     public ICollection<MatchUpModel> MatchUps { get; set; }
     public required TournamentStructureType StructureType { get; set; }
+    public TournamentStatus Status { get; set; }
 }
 public enum TournamentStructureType
 {
     RoundRobin,
     SingleElimination,
     DoubleElimination
+}
+public enum TournamentStatus
+{
+    Open,
+    Closed,
+    Ongoing,
+    ComingSoon,
+    FullyBooked
 }

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 using ModelsLibrary.DataAccess;
 using ModelsLibrary.Models;
 
+namespace API.Repository;
 public class CoachRepository : ICoachRepository
 {
     private readonly UserManager<User> _userManager;

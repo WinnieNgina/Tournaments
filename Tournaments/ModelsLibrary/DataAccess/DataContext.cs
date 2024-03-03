@@ -62,6 +62,9 @@ namespace ModelsLibrary.DataAccess
             modelBuilder.Entity<TeamModel>()
                 .HasIndex(t => t.Name)
                 .IsUnique(true);
+            modelBuilder.Entity<TournamentModel>()
+                .HasIndex(t => t.Name)
+                .IsUnique(true);
 
             modelBuilder.Entity<User>()
                 .HasDiscriminator<string>("UserType")
