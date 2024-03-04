@@ -12,7 +12,7 @@ using ModelsLibrary.DataAccess;
 namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240224083346_InitialCreation")]
+    [Migration("20240304051650_InitialCreation")]
     partial class InitialCreation
     {
         /// <inheritdoc />
@@ -54,22 +54,22 @@ namespace API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "10ae9757-730f-40ac-9251-45341f042b12",
-                            ConcurrencyStamp = "4081357a-c6d3-4dc2-9a3f-e089adc6cda7",
+                            Id = "6282ac12-9f84-4415-bfb3-0799426bbabc",
+                            ConcurrencyStamp = "3038fd04-a8b0-46fc-9b77-4c1325f4f601",
                             Name = "Player",
                             NormalizedName = "PLAYER"
                         },
                         new
                         {
-                            Id = "9b821d3c-9c6e-4286-b2a8-732e4ebc6e98",
-                            ConcurrencyStamp = "0b1f11ab-c8b9-4a9e-a0df-34797880e1da",
+                            Id = "b4dcd32c-03ca-4483-8d62-5547e69b9b5e",
+                            ConcurrencyStamp = "d3e1a86d-80ae-4006-831a-7be0674cda27",
                             Name = "Organizer",
                             NormalizedName = "ORGANIZER"
                         },
                         new
                         {
-                            Id = "c9abd61e-a491-4738-89e8-8210a95a6828",
-                            ConcurrencyStamp = "9770b4fc-e9a9-43e9-b8b3-fc796ed5737e",
+                            Id = "0f9c62d8-2bd7-44b2-9054-dbb16e38dbf5",
+                            ConcurrencyStamp = "b01fe558-e032-48ac-b46c-11bde57959b4",
                             Name = "Coach",
                             NormalizedName = "COACH"
                         });
@@ -433,6 +433,9 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<int>("StructureType")
                         .HasColumnType("int");
 
@@ -443,6 +446,9 @@ namespace API.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.HasIndex("OrganizerId");
 

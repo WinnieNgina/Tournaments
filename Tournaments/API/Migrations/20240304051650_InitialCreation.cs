@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -241,7 +242,8 @@ namespace API.Migrations
                     TournamentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     OrganizerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AverageRating = table.Column<double>(type: "float", nullable: false),
-                    StructureType = table.Column<int>(type: "int", nullable: false)
+                    StructureType = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -417,9 +419,9 @@ namespace API.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "10ae9757-730f-40ac-9251-45341f042b12", "4081357a-c6d3-4dc2-9a3f-e089adc6cda7", "Player", "PLAYER" },
-                    { "9b821d3c-9c6e-4286-b2a8-732e4ebc6e98", "0b1f11ab-c8b9-4a9e-a0df-34797880e1da", "Organizer", "ORGANIZER" },
-                    { "c9abd61e-a491-4738-89e8-8210a95a6828", "9770b4fc-e9a9-43e9-b8b3-fc796ed5737e", "Coach", "COACH" }
+                    { "0f9c62d8-2bd7-44b2-9054-dbb16e38dbf5", "b01fe558-e032-48ac-b46c-11bde57959b4", "Coach", "COACH" },
+                    { "6282ac12-9f84-4415-bfb3-0799426bbabc", "3038fd04-a8b0-46fc-9b77-4c1325f4f601", "Player", "PLAYER" },
+                    { "b4dcd32c-03ca-4483-8d62-5547e69b9b5e", "d3e1a86d-80ae-4006-831a-7be0674cda27", "Organizer", "ORGANIZER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -519,6 +521,12 @@ namespace API.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Team_Name",
                 table: "Team",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tournament_Name",
+                table: "Tournament",
                 column: "Name",
                 unique: true);
 
